@@ -1,0 +1,128 @@
+[
+ {
+  "c2s_total": 864,
+  "s2c_total": 1049,
+  "c2s_by_record": {
+   "HANDSHAKE": 213,
+   "CCS": 6,
+   "APPDATA": 645
+  },
+  "c2s_kx_bytes": 208,
+  "s2c_by_record": {
+   "HANDSHAKE": 127,
+   "CCS": 6,
+   "APPDATA": 916
+  },
+  "s2c_kx_bytes": 122,
+  "total": 1913,
+  "label": "X25519 + ECDSA-P256",
+  "group": "X25519",
+  "cert_alg": "ecdsa-p256",
+  "rc": 0
+ },
+ {
+  "c2s_total": 9228,
+  "s2c_total": 9412,
+  "c2s_by_record": {
+   "HANDSHAKE": 213,
+   "CCS": 6,
+   "APPDATA": 9009
+  },
+  "c2s_kx_bytes": 208,
+  "s2c_by_record": {
+   "HANDSHAKE": 127,
+   "CCS": 6,
+   "APPDATA": 9279
+  },
+  "s2c_kx_bytes": 122,
+  "total": 18640,
+  "label": "X25519 + ML-DSA-65",
+  "group": "X25519",
+  "cert_alg": "ml-dsa-65",
+  "rc": 0
+ },
+ {
+  "c2s_total": 2010,
+  "s2c_total": 2105,
+  "c2s_by_record": {
+   "HANDSHAKE": 1357,
+   "CCS": 6,
+   "APPDATA": 647
+  },
+  "c2s_kx_bytes": 1352,
+  "s2c_by_record": {
+   "HANDSHAKE": 1183,
+   "CCS": 6,
+   "APPDATA": 916
+  },
+  "s2c_kx_bytes": 1178,
+  "total": 4115,
+  "label": "ML-KEM-768 + ECDSA-P256",
+  "group": "MLKEM768",
+  "cert_alg": "ecdsa-p256",
+  "rc": 0
+ },
+ {
+  "c2s_total": 10372,
+  "s2c_total": 10468,
+  "c2s_by_record": {
+   "HANDSHAKE": 1357,
+   "CCS": 6,
+   "APPDATA": 9009
+  },
+  "c2s_kx_bytes": 1352,
+  "s2c_by_record": {
+   "HANDSHAKE": 1183,
+   "CCS": 6,
+   "APPDATA": 9279
+  },
+  "s2c_kx_bytes": 1178,
+  "total": 20840,
+  "label": "ML-KEM-768 + ML-DSA-65",
+  "group": "MLKEM768",
+  "cert_alg": "ml-dsa-65",
+  "rc": 0
+ },
+ {
+  "c2s_total": 1518,
+  "s2c_total": 1384,
+  "c2s_by_record": {
+   "HANDSHAKE": 1407,
+   "CCS": 6,
+   "APPDATA": 105
+  },
+  "c2s_kx_bytes": 1402,
+  "s2c_by_record": {
+   "HANDSHAKE": 1189,
+   "CCS": 6,
+   "APPDATA": 189
+  },
+  "s2c_kx_bytes": 1184,
+  "total": 2902,
+  "label": "ML-KEM-768 + PSK",
+  "group": "MLKEM768",
+  "cert_alg": "psk",
+  "rc": 0
+ },
+ {
+  "c2s_total": 374,
+  "s2c_total": 328,
+  "c2s_by_record": {
+   "HANDSHAKE": 263,
+   "CCS": 6,
+   "APPDATA": 105
+  },
+  "c2s_kx_bytes": 258,
+  "s2c_by_record": {
+   "HANDSHAKE": 133,
+   "CCS": 6,
+   "APPDATA": 189
+  },
+  "s2c_kx_bytes": 128,
+  "total": 702,
+  "label": "X25519 + PSK",
+  "group": "X25519",
+  "cert_alg": "psk",
+  "rc": 0
+ }
+]

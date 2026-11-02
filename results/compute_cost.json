@@ -1,0 +1,50 @@
+{
+ "wall_s": 11.27,
+ "handshakes": [
+  {
+   "config": "ML-DSA-44",
+   "sig_seconds": 0.000523,
+   "verify_seconds": 9.5e-05,
+   "total": 0.001332,
+   "share": 0.00011818988464951199,
+   "margin": 8460.96096096096
+  },
+  {
+   "config": "ML-DSA-65",
+   "sig_seconds": 0.000774,
+   "verify_seconds": 0.000145,
+   "total": 0.0019339999999999997,
+   "share": 0.00017160603371783493,
+   "margin": 5827.300930713548
+  },
+  {
+   "config": "ML-DSA-87",
+   "sig_seconds": 0.00104,
+   "verify_seconds": 0.000283,
+   "total": 0.002742,
+   "share": 0.0002433007985803017,
+   "margin": 4110.138584974471
+  },
+  {
+   "config": "ECDSA-P256",
+   "sig_seconds": 0.0008,
+   "verify_seconds": 0.0007,
+   "total": 0.003,
+   "share": 0.00026619343389529726,
+   "margin": 3756.6666666666665
+  },
+  {
+   "config": "ML-KEM-768 + PSK",
+   "sig_seconds": 0.0,
+   "verify_seconds": 0.0,
+   "total": 9.6e-05,
+   "share": 2.8915662650602413e-05,
+   "margin": 34583.33333333333
+  }
+ ],
+ "kem_seconds": {
+  "keygen": 4e-05,
+  "encaps": 2.2e-05,
+  "decaps": 3.4e-05
+ }
+}

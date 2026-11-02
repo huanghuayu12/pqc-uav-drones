@@ -1,0 +1,3 @@
+# Python 3.10+ (uses PEP 604 unions in annotations)
+matplotlib>=3.5
+numpy>=1.21

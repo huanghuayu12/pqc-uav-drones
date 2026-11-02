@@ -1,0 +1,14 @@
+# Normalise line endings so the artifact behaves the same on Linux, macOS
+# and Windows.  Source and data are LF; binaries are left alone.
+* text=auto eol=lf
+
+*.png binary
+*.pdf binary
+*.jpg binary
+
+*.csv  text eol=lf
+*.json text eol=lf
+*.py   text eol=lf
+*.tex  text eol=lf
+*.bib  text eol=lf
+*.md   text eol=lf

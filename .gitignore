@@ -1,0 +1,26 @@
+# TinyTeX is vendored locally for the build, not part of the artifact
+.tools/
+
+# Early simulation-only draft, superseded by the measured results.
+# Kept in the working tree as a record of what was thrown away.
+archive/
+
+# LaTeX intermediates
+manuscript/*.aux
+manuscript/*.log
+manuscript/*.bbl
+manuscript/*.blg
+manuscript/*.out
+manuscript/*.toc
+manuscript/*.spl
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp

@@ -1,0 +1,344 @@
+% =====================================================================
+%  references.bib
+%
+%  NOTE TO AUTHORS -- READ BEFORE SUBMISSION
+%  Every entry below was written from memory. Verify each one against
+%  the DOI / official record before submitting; bibliographic details
+%  (page ranges especially) are the most likely place for an error.
+%  Entries whose existence I am confident about but whose page numbers
+%  I omitted rather than guess are marked with  % VERIFY.
+%
+%  This list is deliberately short of UAV-security-specific literature.
+%  Drones reviewers will expect 10-15 citations to prior UAV link
+%  security / MAVLink security work; add them at the marked places in
+%  main.tex (search for "ADD-CITATION").
+% =====================================================================
+
+@article{shor1997,
+  author  = {Shor, Peter W.},
+  title   = {Polynomial-Time Algorithms for Prime Factorization and Discrete
+             Logarithms on a Quantum Computer},
+  journal = {SIAM Journal on Computing},
+  volume  = {26},
+  number  = {5},
+  pages   = {1484--1509},
+  year    = {1997},
+  doi     = {10.1137/S0097539795293172}
+}
+
+@article{bernstein2017,
+  author  = {Bernstein, Daniel J. and Lange, Tanja},
+  title   = {Post-Quantum Cryptography},
+  journal = {Nature},
+  volume  = {549},
+  number  = {7675},
+  pages   = {188--194},
+  year    = {2017},
+  doi     = {10.1038/nature23461}
+}
+
+@article{mosca2018,
+  author  = {Mosca, Michele},
+  title   = {Cybersecurity in an Era with Quantum Computers: Will We Be Ready?},
+  journal = {IEEE Security \& Privacy},
+  volume  = {16},
+  number  = {5},
+  pages   = {38--41},
+  year    = {2018},
+  doi     = {10.1109/MSP.2018.3761723}
+}
+
+@techreport{fips203,
+  author      = {{National Institute of Standards and Technology}},
+  title       = {{FIPS} 203: Module-Lattice-Based Key-Encapsulation Mechanism
+                 Standard},
+  institution = {U.S. Department of Commerce},
+  year        = {2024},
+  doi         = {10.6028/NIST.FIPS.203}
+}
+
+@techreport{fips204,
+  author      = {{National Institute of Standards and Technology}},
+  title       = {{FIPS} 204: Module-Lattice-Based Digital Signature Standard},
+  institution = {U.S. Department of Commerce},
+  year        = {2024},
+  doi         = {10.6028/NIST.FIPS.204}
+}
+
+@techreport{fips205,
+  author      = {{National Institute of Standards and Technology}},
+  title       = {{FIPS} 205: Stateless Hash-Based Digital Signature Standard},
+  institution = {U.S. Department of Commerce},
+  year        = {2024},
+  doi         = {10.6028/NIST.FIPS.205}
+}
+
+@techreport{nistir8105,
+  author      = {Chen, Lily and Jordan, Stephen and Liu, Yi-Kai
+                 and Moody, Dustin and Peralta, Rene and Perlner, Ray and
+                 Smith-Tone, Daniel},
+  title       = {Report on Post-Quantum Cryptography},
+  institution = {National Institute of Standards and Technology},
+  number      = {NISTIR 8105},
+  year        = {2016},
+  doi         = {10.6028/NIST.IR.8105}
+}
+
+@misc{rfc8446,
+  author = {Rescorla, Eric},
+  title  = {The Transport Layer Security ({TLS}) Protocol Version 1.3},
+  series = {RFC 8446},
+  year   = {2018},
+  doi    = {10.17487/RFC8446}
+}
+
+@misc{rfc9147,
+  author = {Rescorla, Eric and Tschofenig, Hannes and Fossati, Thomas},
+  title  = {The Datagram Transport Layer Security ({DTLS}) Protocol Version 1.3},
+  series = {RFC 9147},
+  year   = {2022},
+  doi    = {10.17487/RFC9147}
+}
+
+@misc{rfc6347,
+  author = {Rescorla, Eric and Modadugu, Nagendra},
+  title  = {Datagram Transport Layer Security Version 1.2},
+  series = {RFC 6347},
+  year   = {2012},
+  doi    = {10.17487/RFC6347}
+}
+
+@inproceedings{pqm4,
+  author    = {Kannwischer, Matthias J. and Rijneveld, Joost and Schwabe, Peter
+               and Stoffelen, Ko},
+  title     = {{pqm4}: Testing and Benchmarking {NIST} {PQC} on {ARM}
+               {Cortex-M4}},
+  booktitle = {Proceedings of the 2nd NIST PQC Standardization Conference},
+  year      = {2019}
+}
+
+@inproceedings{botros2019,
+  author    = {Botros, Leon and Kannwischer, Matthias J. and Schwabe, Peter},
+  title     = {Memory-Efficient High-Speed Implementation of {Kyber} on
+               {ARM} {Cortex-M4}},
+  booktitle = {Progress in Cryptology -- AFRICACRYPT 2019},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {11627},
+  pages     = {111--130},
+  year      = {2019},
+  doi       = {10.1007/978-3-030-23696-0_7}
+}
+
+@book{pqcryptoBook,
+  editor    = {Bernstein, Daniel J. and Buchmann, Johannes and Dahmen, Erik},
+  title     = {Post-Quantum Cryptography},
+  publisher = {Springer},
+  address   = {Berlin, Germany},
+  year      = {2009},
+  doi       = {10.1007/978-3-540-88702-7}
+}
+
+@techreport{do362,
+  author      = {{RTCA, Inc.}},
+  title       = {{DO-362}: Command and Control ({C2}) Data Link Minimum
+                 Operational Performance Standards ({MOPS}) (Terrestrial)},
+  institution = {RTCA, Inc.},
+  address     = {Washington, DC, USA},
+  year        = {2016}
+}
+
+@misc{mavlink,
+  author       = {{MAVLink Development Team}},
+  title        = {{MAVLink} Developer Guide},
+  howpublished = {\url{https://mavlink.io/en/}},
+  year         = {2024},
+  note         = {Accessed: 2026-11-01}
+}
+
+@misc{liboqs,
+  author       = {{Open Quantum Safe Project}},
+  title        = {{liboqs}: An Open-Source C Library for Quantum-Safe
+                  Cryptography},
+  howpublished = {\url{https://openquantumsafe.org/}},
+  year         = {2024},
+  note         = {Accessed: 2026-11-01}
+}
+
+@article{zeng2016,
+  author  = {Zeng, Yong and Zhang, Rui and Lim, Teng Joon},
+  title   = {Wireless Communications with Unmanned Aerial Vehicles:
+             Opportunities and Challenges},
+  journal = {IEEE Communications Magazine},
+  volume  = {54},
+  number  = {5},
+  pages   = {36--42},
+  year    = {2016},
+  doi     = {10.1109/MCOM.2016.7470933}
+}
+
+@article{mozaffari2019,
+  author  = {Mozaffari, Mohammad and Saad, Walid and Bennis, Mehdi and
+             Nam, Young-Han and Debbah, M{\'e}rouane},
+  title   = {A Tutorial on {UAVs} for Wireless Networks: Applications,
+             Challenges, and Open Problems},
+  journal = {IEEE Communications Surveys \& Tutorials},
+  volume  = {21},
+  number  = {3},
+  pages   = {2334--2360},
+  year    = {2019},
+  doi     = {10.1109/COMST.2019.2902862}
+}
+
+@article{gupta2016,
+  author  = {Gupta, Lav and Jain, Raj and Vaszkun, Gabor},
+  title   = {Survey of Important Issues in {UAV} Communication Networks},
+  journal = {IEEE Communications Surveys \& Tutorials},
+  volume  = {18},
+  number  = {2},
+  pages   = {1123--1152},
+  year    = {2016},
+  doi     = {10.1109/COMST.2015.2495297}
+}
+
+@misc{rfc9881,
+  author       = {Massimo, J. and Kampanakis, P. and Salter, S.},
+  title        = {Internet {X.509} Public Key Infrastructure: Algorithm Identifiers for {ML-DSA}},
+  howpublished = {RFC 9881},
+  year         = {2025},
+  publisher    = {IETF},
+  doi          = {10.17487/RFC9881}
+}
+
+@misc{rfc9909,
+  author       = {Massimo, J. and Kampanakis, P. and Salter, S.},
+  title        = {Internet {X.509} Public Key Infrastructure: Algorithm Identifiers for {SLH-DSA}},
+  howpublished = {RFC 9909},
+  year         = {2025},
+  publisher    = {IETF},
+  doi          = {10.17487/RFC9909}
+}
+
+@misc{rfc6928,
+  author       = {Chu, J. and Dukkipati, N. and Cheng, Y. and Mathis, M.},
+  title        = {Increasing {TCP}'s Initial Window},
+  howpublished = {RFC 6928},
+  year         = {2013},
+  publisher    = {IETF},
+  doi          = {10.17487/RFC6928}
+}
+
+@article{hussien2026pqmavlink,
+  author  = {Hussien, A. and Abdullah, A. A.},
+  title   = {A Post-Quantum Lightweight Mutual Authentication and Encryption
+             Scheme for Secure {UAV} Communications},
+  journal = {Frontiers in Computer Science},
+  year    = {2026},
+  volume  = {8},
+  doi     = {10.3389/fcomp.2026.1947684}
+}
+
+@misc{morvs2026swarm,
+  author       = {{MORVS}},
+  title        = {Swarm {SDK} 0.4.0: Encrypted Messaging for Drone Swarms},
+  year         = {2026},
+  howpublished = {\url{https://morvs.ai/swarm/}},
+  note         = {Release specifications and measured message sizes, revised
+                  8 October 2026; accessed 2026-11-01}
+}
+
+@article{xia2024ligkyx,
+  author  = {Xia, Tao and Wang, Menglin and He, Jun and Yang, Gang and
+             Fan, Linna and Wei, Guoheng},
+  title   = {A Quantum-Resistant Identity Authentication and Key Agreement
+             Scheme for {UAV} Networks Based on {Kyber} Algorithm},
+  journal = {Drones},
+  volume  = {8},
+  number  = {8},
+  pages   = {359},
+  year    = {2024},
+  doi     = {10.3390/drones8080359}
+}
+
+@inproceedings{pornin2019falcon,
+  author    = {Pornin, T.},
+  title     = {New Efficient, Constant-Time Implementations of {Falcon}},
+  booktitle = {Cryptology ePrint Archive, Report 2019/893},
+  year      = {2019}
+}
+
+@misc{openssl35,
+  author       = {{The OpenSSL Project}},
+  title        = {{OpenSSL} 3.5: {ML-KEM}, {ML-DSA} and {SLH-DSA} Support},
+  year         = {2025},
+  howpublished = {\url{https://openssl-library.org/}},
+  note         = {Version 3.5.7 used for all measurements}
+}
+
+@misc{mtc2026draft,
+  author       = {Benjamin, David and O'Brien, Devon and Westerbaan, Bas and
+                  Valenta, Luke and Valsorda, Filippo},
+  title        = {Merkle Tree Certificates},
+  howpublished = {Internet-Draft draft-ietf-plants-merkle-tree-certs-07},
+  organization = {IETF PLANTS Working Group},
+  year         = {2026},
+  note         = {Work in progress, revised 7 October 2026}
+}
+
+@misc{lec2026pq,
+  author       = {{Internet Security Research Group}},
+  title        = {A Post-Quantum Future for {Let's} {Encrypt}},
+  howpublished = {\url{https://letsencrypt.org/2026/06/03/pq-future}},
+  year         = {2026},
+  note         = {Technical announcement, not peer reviewed; published
+                  3 June 2026; accessed 2026-11-01}
+}
+
+@inproceedings{sikeridis2020ndss,
+  author    = {Sikeridis, Dimitrios and Kampanakis, Panos and
+               Devetsikiotis, Michael},
+  title     = {Post-Quantum Authentication in {TLS} 1.3: A Performance Study},
+  booktitle = {Proceedings of the 27th Annual Network and Distributed System
+               Security Symposium (NDSS)},
+  address   = {San Diego, CA, USA},
+  publisher = {The Internet Society},
+  year      = {2020}
+}
+
+@inproceedings{sikeridis2020conext,
+  author    = {Sikeridis, Dimitrios and Kampanakis, Panos and
+               Devetsikiotis, Michael},
+  title     = {Assessing the Overhead of Post-Quantum Cryptography in {TLS} 1.3
+               and {SSH}},
+  booktitle = {Proceedings of the 16th International Conference on Emerging
+               Networking Experiments and Technologies (CoNEXT)},
+  address   = {Barcelona, Spain},
+  publisher = {ACM},
+  pages     = {149--156},
+  year      = {2020},
+  doi       = {10.1145/3386367.3431305}
+}
+
+@inproceedings{paquin2020,
+  author    = {Paquin, Christian and Stebila, Douglas and Tamvada, Goutam},
+  title     = {Benchmarking Post-Quantum Cryptography in {TLS}},
+  booktitle = {Post-Quantum Cryptography -- PQCrypto 2020},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {12100},
+  pages     = {72--91},
+  publisher = {Springer},
+  address   = {Cham, Switzerland},
+  year      = {2020},
+  doi       = {10.1007/978-3-030-44223-1_5}
+}
+
+@inproceedings{schwabe2020kemtls,
+  author    = {Schwabe, Peter and Stebila, Douglas and Wiggers, Thom},
+  title     = {Post-Quantum {TLS} Without Handshake Signatures},
+  booktitle = {Proceedings of the 2020 ACM SIGSAC Conference on Computer and
+               Communications Security (CCS)},
+  address   = {Virtual Event, USA},
+  publisher = {ACM},
+  pages     = {1461--1480},
+  year      = {2020},
+  doi       = {10.1145/3372297.3423350}
+}
