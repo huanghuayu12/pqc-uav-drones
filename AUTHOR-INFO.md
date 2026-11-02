@@ -1,7 +1,10 @@
-# 投稿前必须填的 29 处占位符
+# 投稿前必须填的占位符
 
-`main.tex` 里还有 29 个 `<<...>>`。MDPI 不会带占位符送排版，这一份是把它们
-列成可以一次填完的表。填好发我，或者直接按行号替换。
+**当前剩余 28 处，全部是作者信息**（作者块 12、作者贡献 15、资助 1）。
+仓库地址与可选的 `\firstnote` 已处理完毕，见第四节。
+
+MDPI 不会带占位符送排版，这一份是把它们列成可以一次填完的表。
+填好发我，或者直接按行号替换。
 
 ## 一、作者块（12 处，`main.tex` 第 59–80 行）
 
@@ -54,29 +57,33 @@ visualization, B; supervision, C; project administration, C.
 - 有资助：给我**基金号 + 资助方全称**，MDPI 要求写全称，例如
   `This work was supported by the National Natural Science Foundation of China (grant no. 62xxxxxx).`
 
-## 四、仓库地址（1 处，第 1952 行）
+## 四、仓库地址 —— 已完成
+
+仓库已建并推送：**https://github.com/huanghuayu12/pqc-uav-drones**
+
+- 账号 `huanghuayu12`，SSH key 已配置（`~/.ssh/id_ed25519`），后续可直接 `git push`
+- 提交作者已设为 `huanghuayu12 <huanghuayu12@users.noreply.github.com>`，贡献图会计入
+- 远程 `main` 与本地同步，最新提交 `189e08d`
+- 正文 `\dataavailability` 已改为该 URL，PDF 文本层已核实渲染正确
+- `\firstnote`（现地址）整行删除，因为它是可选项，留占位会被排版退回
+
+以后更新数据的流程：
 
 ```
-The measurement harness, the emulated-link proxy and the record-layer parser
-are available at <<repository URL>>.
+cd pqc-uav-drones
+python run_all.py          # 重跑实验，覆盖 results/
+git add -A && git commit -m "说明"
+git push
 ```
 
-三条路，选一条告诉我：
-
-**A. 建 GitHub 仓库（推荐）** — 我已经把仓库整理成可直接推的状态：
-`.gitignore`、`requirements.txt`、`REPRODUCE.md`、`run_all.py` 都在。
-建好仓库后给我 URL，我把这句话换成正式链接；如果同时打 Zenodo DOI，
-正文里可以写 DOI 而不是裸 URL，更稳。
-
-**B. 不建仓库** — 我把这句改成
-`available from the corresponding author on reasonable request`。
-能过审，但对一篇以可复现为卖点的测量论文是自伤，审稿人已经点出这一点是加分项。
-
-**C. 已有内部镜像** — 给我可公开访问的地址即可；内网地址不行。
+想给论文一个比裸 URL 更稳的引用，可以再花十分钟上 Zenodo：
+用 GitHub 账号登录 https://zenodo.org → Settings → GitHub → 打开本仓库开关 →
+在 GitHub 上发一个 Release → Zenodo 自动生成 DOI。拿到 DOI 告诉我，
+我把 `\dataavailability` 改成 DOI 引用。
 
 ## 五、填完之后我做什么
 
-1. 替换 29 处，`grep -c "<<"` 归零
+1. 替换剩余 28 处，`grep -o "<<[^>]*>>"` 归零
 2. 重新编译，确认 0 overfull / 0 error / 41 标签齐全
 3. 出终稿 PDF，并核对页眉的作者名与 `\AuthorNames` 一致
 4. 打包投稿材料：正文 PDF、7 张矢量图（`manuscript/*.pdf`）、

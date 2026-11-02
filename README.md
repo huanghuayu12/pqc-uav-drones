@@ -4,8 +4,8 @@ Target: **MDPI *Drones*** (research article, measurement-based).
 30 pages, 14 tables, 7 figures, 198-word abstract, 33 references.
 Compiles clean on TeX Live 2026 with the official MDPI class v6.5d.
 
-Reproduce with `python run_all.py` (see `REPRODUCE.md`); placeholders still
-to be filled are listed in `AUTHOR-INFO.md`.
+Reproduce with `python run_all.py` (see `REPRODUCE.md`). The author block is
+still to be filled; `AUTHOR-INFO.md` lists what remains.
 
 All quantitative results come from **real TLS 1.3 handshakes** measured on
 OpenSSL 3.5.7 over an emulated constrained link. One exception remains and
