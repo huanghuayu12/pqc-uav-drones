@@ -1,10 +1,14 @@
 # Post-Quantum C2 for UAVs — measurement package
 
 Target: **MDPI *Drones*** (research article, measurement-based).
-32 pages, 14 tables, 7 figures, 200-word abstract, 33 references.
+33 pages, 14 tables, 7 figures, 200-word abstract, 33 references.
 Compiles clean on TeX Live 2026 with the official MDPI class v6.5d.
 
-Reproduce with `python run_all.py` (see `REPRODUCE.md`). The author block is
+Reproduce with `python run_all.py` (see `REPRODUCE.md`).
+
+Known gap: every measurement is TLS over TCP. A DTLS 1.3 measurement is
+future work -- this stack has no post-quantum DTLS to measure, so the paper
+carries an RFC 9147 bound instead (`harness/dtls_bound.py`). The author block is
 still to be filled; `AUTHOR-INFO.md` lists what remains.
 
 All quantitative results come from **real TLS 1.3 handshakes** measured on
@@ -184,7 +188,7 @@ cd manuscript
 pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 
-Expected: 32 pages, 0 undefined references, 0 overfull boxes, 33 bibitems.
+Expected: 33 pages, 0 undefined references, 0 overfull boxes, 33 bibitems.
 
 To see the ticket artefact yourself:
 
