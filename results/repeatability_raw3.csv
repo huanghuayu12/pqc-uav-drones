@@ -1,0 +1,16 @@
+config,run,bytes,t_s,ok
+X25519 + ECDSA-P256,0,1913,1.9975,True
+ML-KEM-768 + ML-DSA-65 (mutual),0,20840,11.3129,True
+ML-KEM-768 PSK (pre-provisioned),0,2902,3.36,True
+X25519 + ECDSA-P256,1,1912,2.3338,True
+ML-KEM-768 + ML-DSA-65 (mutual),1,20840,11.317,True
+ML-KEM-768 PSK (pre-provisioned),1,2902,3.3144,True
+X25519 + ECDSA-P256,2,1914,2.0241,True
+ML-KEM-768 + ML-DSA-65 (mutual),2,20840,11.2703,True
+ML-KEM-768 PSK (pre-provisioned),2,2902,3.2816,True
+X25519 + ECDSA-P256,3,1915,1.9594,True
+ML-KEM-768 + ML-DSA-65 (mutual),3,20840,11.2732,True
+ML-KEM-768 PSK (pre-provisioned),3,2902,3.3008,True
+X25519 + ECDSA-P256,4,1913,2.003,True
+ML-KEM-768 + ML-DSA-65 (mutual),4,20840,11.2807,True
+ML-KEM-768 PSK (pre-provisioned),4,2902,3.3004,True

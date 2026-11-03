@@ -61,7 +61,7 @@ python run_all.py --only rate_sweep delay_sweep
 | 10 | Certificates vs pre-shared key | `real_psk_9600.csv` |
 | 11 | Loss sweep | `loss_sweep.py`, `loss_low.py` |
 | 12 | The remedy ladder | derived: `real_9600_sweep.csv` + FIPS object sizes |
-| 13 | Repeatability, five runs | `repeat.py` → `repeatability.csv` |
+| 13 | Repeatability, one batch of five | `repeatability_raw.py` → `repeatability_raw.csv` (batches 2 and 3: `repeatability_raw2.csv`, `repeatability_raw3.csv`) |
 | 14 | Chain depth, one vs two intermediates | `chain_depth.py` → `chain_depth.csv` |
 
 | Figure | Script |
@@ -87,6 +87,13 @@ the text. Do not expect `run_all.py` to produce them.
   OpenSSL has no Falcon implementation, so its byte count follows from the
   object sizes and its time from the slope.
 - **Cortex-M4 cycle counts** are cited from the literature, not measured.
+- **The burst bound** (`burst_bound.py`) is closed-form, not a simulation: it
+  takes the measured 0.446 s per injected drop and re-charges it per burst
+  episode instead of per lost segment. Its inputs are the segment airtime and
+  the burst length, both arguments of the script.
+- **Table 8's two runs per cell** are what was measured; the table note quotes
+  the resulting spread (largest 1.9 %, median 0.3 %) rather than a standard
+  deviation, which two runs cannot support.
 
 ## Figure 1 is the one exception to "no hand-entered numbers"
 

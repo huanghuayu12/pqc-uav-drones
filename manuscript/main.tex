@@ -82,21 +82,21 @@ links is usually assessed by timing \mlkem{} and \mldsa{} on a flight
 controller. We argue this measures the wrong quantity: on a C2 link the
 binding constraint is bandwidth. Identity dominance follows from
 FIPS~203/204 sizes; whether a stack reproduces it, and its cost in
-seconds, does not. On \tls{}~1.3 over an emulated 9.6\,\kbps{}/250\,ms
-link, with mutual authentication and a self-signed, depth-one chain,
+seconds, does not. On TLS~1.3 over TCP, on an emulated 9.6\,\kbps{}/250\,ms
+link with mutual authentication and a self-signed, depth-one chain,
 18{,}310 of the 20{,}840 bytes an \mlkem{}-768\,$+$\,\mldsa{}-65
-handshake sends are certificates and signatures --- 7.2 times the key
-exchange, with the wire agreeing to the byte. \fndsa{}-512 gains only
-12.6\,\% over \mldsa{}-44: not worth a draft standard. One intermediate
-certificate costs 11{,}248 bytes, more than any signature change saves.
-The penalty is neither rate- nor delay-invariant: 8.64$\times$ to
-3.07$\times$ across 2.4--38.4\,\kbps{}, and 6.7$\times$ at 40\,ms
-low-Earth orbit, so the geostationary figures are conservative.
-Removing certificates beats shrinking them: a pre-shared-key handshake
-carries 2{,}902 bytes and completes in 3.32\,s, 1.67 times the classical
-time, and loss does not reorder them. Five measurement pitfalls are
-documented, one inflating the count by 54.7\,\%. Readiness is an
-identity-architecture decision, not an algorithm choice.}
+handshake sends are certificate, signature and the records carrying
+them --- 7.2 times the key exchange, with the wire agreeing to the byte.
+\fndsa{}-512 gains only 12--13\,\% over \mldsa{}-44: not worth a draft
+standard. One intermediate certificate costs 11{,}248 bytes, more than
+any signature change saves. The penalty is neither rate- nor
+delay-invariant: 8.64$\times$ to 3.07$\times$ across 2.4--38.4\,\kbps{},
+6.7$\times$ at 40\,ms low-Earth orbit, so the geostationary figures are
+conservative. Removing certificates beats shrinking them: a
+pre-shared-key handshake carries 2{,}902 bytes and takes 3.32\,s,
+1.67$\times$ the classical time, and loss does not reorder them. Five
+measurement pitfalls documented, one inflating the count by 54.7\,\%.
+Readiness is an identity-architecture decision, not an algorithm choice.}
 
 \keyword{post-quantum cryptography; \mlkem{}; \mldsa{}; \tls{} 1.3;
 unmanned aerial vehicles; command and control; MAVLink; certificate
@@ -296,9 +296,12 @@ decision with measurable consequences, and it is orthogonal to the
 choice of cryptographic algorithm.
 
 Either way a post-quantum certificate does not fit in one \mav{} frame:
-at 255 bytes of payload, of which 12 are header and checksum, a
-5{,}549-byte certificate spans twenty frames, and the receiver has to
-reassemble them before it can verify anything. That is not an argument
+a \mav{}~v2 frame carries at most 255 bytes of payload, with 12 bytes of
+header and checksum outside it, so a 5{,}549-byte certificate spans
+twenty-two frames and the receiver has to hold all 5.4\,kB of them
+before it can verify anything --- 2.8\,\% of the 192\,kB floor on a
+typical flight controller, which is affordable, but it is buffered
+before a single byte of the handshake has been authenticated. That is not an argument
 against \mav{} signing, which protects frames rather than sessions, but
 it is why the measurements here are taken at the transport layer: any
 session-level post-quantum authentication on a \mav{} link will be
@@ -348,9 +351,9 @@ post-quantum signatures are not implemented at all, that \mlkem{}-768 is
 opt-in and used for session setup only, and that its 1{,}088-byte
 ciphertext travels with the first message \cite{morvs2026swarm}. A
 sufficient explanation is arithmetic that we perform here rather than
-quote: an \mldsa{}-87 signature is 4{,}627 bytes, and a MAVLink~v2 frame
-carries at most 255 bytes of which 12 are header and checksum, so one
-signature alone spans 20 frames.
+quote: an \mldsa{}-87 signature is 4{,}627 bytes, and a \mav{}~v2 frame
+carries at most 255 bytes of payload, so one signature alone spans
+nineteen frames.
 
 \mav{}~v2 signing deserves a word here, because it is sometimes offered
 as an answer to this problem. It appends a 48-bit keyed hash computed
@@ -451,7 +454,11 @@ forwarded chunk. Independent per-direction rate limiting matches the
 uplink and downlink of a real C2 radio, which are separate channels.
 Because chunks are forwarded strictly in order, the per-chunk delay
 composes into correct store-and-forward behaviour without requiring
-\texttt{tc}, root privileges or dedicated hardware.
+\texttt{tc}, root privileges or dedicated hardware. That composition is
+an argument rather than a validation: what was checked directly against
+a known transfer is the serialisation rate, to $+0.3$\,\%, and
+Section~\ref{sec:delay} reads only ratios between configurations from
+the delay axis for that reason.
 
 Authentication is mutual throughout, because a C2 link authenticates
 the aircraft to the ground station and the ground station to the
@@ -829,7 +836,9 @@ individual messages.
 \caption{Full measured matrix: handshake bytes and completion time (s)
 for every combination of four key exchanges and four certificate
 signature algorithms, mutual authentication, 9.6\,\kbps{} per direction
-and 250\,ms one-way. Cells are single runs. The row and column
+and 250\,ms one-way. Cells are single runs; the repeatability of
+Section~\ref{sec:repeat} puts a $1\sigma$ interval of about $\pm0.02$\,s
+on each, which is smaller than the last digit shown. The row and column
 increments are additive to within $\pm 2$ bytes, which is the property
 Section~\ref{sec:attribution} relies on.}
 \label{tab:matrix}
@@ -1063,7 +1072,11 @@ an operator will face. Two runs per cell.
 \begin{table}[H]
 \caption{Completion time against link rate at a fixed 250\,ms one-way
 delay. Cells are mean handshake bytes / mean completion time in
-seconds over two runs. ``PQC'' is \mlkem{}-768$+$\mldsa{}-65,
+seconds over two runs. Two is fewer than elsewhere in the paper, and the
+justification is the measured spread rather than convenience: across the
+fifteen cells the largest within-cell difference is 1.9\,\% and the
+median 0.3\,\%, both far below the 2.8$\times$ range the table exists to
+show. ``PQC'' is \mlkem{}-768$+$\mldsa{}-65,
 ``pre-shared'' is \mlkem{}-768 with an external PSK. Ratios are formed
 within each row, so they are unaffected by the inter-run byte variation
 of Section~\ref{sec:attribution}.}
@@ -1107,7 +1120,10 @@ rule in Section~\ref{sec:attribution}.}
 
 Figure~\ref{fig:rate} plots the sweep, both as absolute completion time
 and as the same data expressed relative to the classical baseline at each
-rate.
+rate. The figure is its own batch, so its ratios sit 0.7\,\% and
+1.8\,\% above the 5.66$\times$ and 1.67$\times$ of
+Table~\ref{tab:psk}; the batches differ only in the ECDSA baseline, for
+the reason Section~\ref{sec:attribution} gives.
 
 \textbf{The penalty is not a constant, and the earlier draft of this
 paper said it was.} It falls monotonically from 8.64$\times$ at
@@ -1167,6 +1183,14 @@ paper describes one geostationary link. An operator flying a low Earth
 orbit constellation will want to know whether the 5.66$\times$ survives
 a 20--60\,ms path, and whether ``bandwidth is the binding constraint''
 survives a link whose latency is small.
+
+One caveat belongs before the numbers rather than in the caption.
+The emulator charges its configured delay once per forwarded chunk rather
+than once per direction switch, so the \emph{absolute} slope of time
+against delay is a property of the emulator, not of the link, and cannot
+be compared with a real satellite budget. What is transport-independent
+is the ratio between two configurations measured on the same emulator,
+and that is all this section reads from the table.
 
 We varied the one-way delay and held everything else fixed: 9.6\,\kbps{}
 per direction, three configurations, four delays, three runs per cell,
@@ -1275,7 +1299,12 @@ Two things follow that the byte count does not show, and both cut against
 reading the 7.2$\times$ as a free saving. The first is that the risk is
 concentrated rather than created: a pre-shared key authenticates every
 session that holds it, so its compromise is the compromise of the whole
-fleet at once, whereas one aircraft's signing key opens one aircraft. The
+fleet at once, whereas one aircraft's signing key opens one aircraft.
+The radius follows from the topology rather than from the crypto: in the
+twenty-aircraft, three-station fleet of Section~\ref{sec:keymgmt} a
+captured aircraft key opens three links for the weeks it takes to re-key
+them, and a group key used instead of pairwise keys opens all sixty
+endpoints for the same window. The
 second is that the certificate has a revocation channel and the
 pre-shared key does not. A certificate can be withdrawn and the peer can
 be told; a key can only be replaced, and replacing it means reaching every
@@ -1457,15 +1486,29 @@ Section~\ref{sec:repeat} reports distributions rather than point
 estimates, and the reason a link budget for an atomic transaction should
 be set from a high quantile.
 
-The model has two limitations we do not want hidden. The per-segment
-loss draw is binomial and independent, so it cannot represent the
-bursty fading that dominates a real narrowband radio link; a
-Gilbert--Elliott process would put more losses in fewer, longer stalls
-and produce a fatter tail than anything in
-Table~\ref{tab:loss}. And charging one RTO per lost segment is an upper
+The model has two limitations, and they can be netted off rather than
+merely confessed. The per-segment loss draw is binomial and independent,
+so it cannot represent the bursty fading that dominates a real
+narrowband radio link; and charging one RTO per lost segment is an upper
 bound, since a real TCP retransmits several losses within one timeout
-using SACK. The first limitation makes our tails optimistic, the second
-makes them pessimistic, and we have not attempted to net them off.
+using SACK. Take a Gilbert--Elliott channel whose bad state loses every
+segment, with stationary loss rate $p$ and mean burst length $L$
+segments. A handshake of $n$ segments then meets about $n p$ lost
+segments but only $n p / L$ distinct recovery episodes, and it is
+episodes, not segments, that a SACK stack charges. The mean penalty
+therefore scales as $1/L$: at $p = 0.20$ the measured $+1.34$\,s becomes
+$+0.48$\,s at $L=3$ and $+0.14$\,s at $L=10$
+(\texttt{harness/burst\_bound.py}). Since both the losses and the
+episodes are proportional to $n$, the \emph{ratio} between two
+configurations is invariant to $L$ --- which is a stronger statement than
+Section~\ref{sec:loss} makes, because it says the ordering survives
+burstiness by construction rather than by coincidence. The direction
+that does not survive is the tail: a burst of $L$ segments is
+$L \times 1.22$\,s of dead air at 9.6\,\kbps{}, so $L=10$ stalls for
+12.2\,s, while the largest stall this model can produce is one RTO. The
+means in Table~\ref{tab:loss} are therefore an upper bound and the
+worst case is a lower bound, which is the direction a link budget
+should err in but not one to quote without saying so.
 
 \textbf{The loss rates in the table are a stress case, not an operating
 point.} Ten and twenty per cent per segment are one to two orders of
@@ -1488,7 +1531,8 @@ whose magnitude is 0.005\,s. What the low-loss batch cannot
 show is that loss is harmless on a real radio link, because a link
 loses segments while this model loses chunks; the honest statement is
 that between 0 and 1\,\% the effect is smaller than the run-to-run
-spread, and above 5\,\% it is not.
+spread at five runs per cell --- not that it is zero --- and above
+5\,\% it is not.
 
 \subsection{What Compact Signatures Can and Cannot Buy}
 \label{sec:compact}
@@ -1567,12 +1611,14 @@ the 192--512\,kB available on a typical flight controller. And
 FIPS~206 has not been finalised, so a design that depends on \fndsa{}
 depends on a moving target.
 
-For completeness: \slhdsa{} is not a candidate here. Its 7{,}856-byte
-signatures and a signature operation measured in hundreds of
-milliseconds make both the byte cost and the time cost worse than
-\mldsa{} at every parameter set, and it is the right choice only where
-hash-based assumptions are required, which is not the case for a
-session handshake.
+For completeness: \slhdsa{} is not a candidate here. Its smallest
+parameter set carries 7{,}856-byte signatures (Table~\ref{tab:sizes},
+from FIPS~205), 3.2 times the \mldsa{}-44 signature, and its signing
+time is measured in hundreds of milliseconds on a microcontroller
+\cite{pqm4}, against well under a millisecond for the lattice schemes.
+Both costs are worse at every parameter set, and it is the right choice
+only where hash-based assumptions are required, which is not the case
+for a session handshake.
 
 \subsection{Repeatability}
 \label{sec:repeat}
@@ -1585,8 +1631,10 @@ the three configurations that carry the argument five times each
 
 \begin{table}[H]
 \caption{Repeatability, five runs per configuration at 9.6\,\kbps{}
-per direction and 250\,ms one-way. Byte counts are identical across
-runs; time varies by less than 1\,\%.}
+per direction and 250\,ms one-way, one batch. Byte counts are identical
+across runs; time varies by less than 1\,\%. The individual runs are
+kept in \texttt{results/repeatability\_raw.csv}, and two further batches
+of the same kind are discussed below.}
 \label{tab:repeat}
 \centering
 \begin{tabular}{lrrcr}
@@ -1610,6 +1658,24 @@ so the conclusions do not depend on measurement precision. The
 catalogued in Section~\ref{sec:attribution}; the byte-level
 differences among them are DER encoding noise, not measurement error.
 
+Two further batches of the same three configurations were run after the
+table was compiled --- fifteen runs per configuration in total
+(\texttt{results/repeatability\_raw*.csv}) --- and they say something
+the single batch could not. \emph{The means reproduce; the spreads do
+not.} Pooled over fifteen runs the means are 2.004, 11.285 and
+3.340\,s, within 1\,\% of the table, but the coefficients of variation
+rise to 4.6, 0.16 and 3.4\,\% because two of the forty-five runs
+stalled: one pre-shared-key run at 3.74\,s against a 3.31\,s median, and
+one classical run at 2.33\,s against 1.96\,s. Both are stalls of 0.4--0.5\,s
+with no injected loss, which is the same order as the 0.446\,s that a
+single retransmission costs in Section~\ref{sec:loss}. A batch of five
+can miss such an event entirely, and the batch in
+Table~\ref{tab:repeat} did; what protects the paper's conclusions is
+that the smallest effect it resolves, the 20\,\% between \mldsa{}-65 and
+\mldsa{}-44, is still four times the largest pooled coefficient rather
+than thirty times the cleanest one. That is a narrower margin than the
+first draft of this section claimed, and it is the honest one.
+
 \section{Discussion}
 \label{sec:discussion}
 
@@ -1617,13 +1683,16 @@ differences among them are DER encoding noise, not measurement error.
 
 The measurements reduce to five rules, in descending order of value.
 
-\textbf{Pre-provision trust if the operational model permits it.} This
-is worth 7.2$\times$ in bytes and 3.4$\times$ in time, and it is the
-only intervention that brings a post-quantum C2 handshake within
+\textbf{Pre-provision trust if the operational model permits it, and
+only if you already distribute symmetric keys.} This is worth
+7.2$\times$ in bytes and 3.4$\times$ in time, and it is the only
+intervention that brings a post-quantum C2 handshake within
 1.67$\times$ of its classical cost. It is also the only one that
 requires an architectural decision rather than a configuration change,
-and Section~\ref{sec:alternatives} states when it is not available
-while Section~\ref{sec:keymgmt} states what it costs to operate.
+and the precondition is not decorative: the saving is airtime, while the
+cost is a key-distribution mechanism the operator must already own.
+Section~\ref{sec:alternatives} states when the option is unavailable and
+Section~\ref{sec:keymgmt} when it is available but not worth buying.
 
 \textbf{Do not spend effort on the key exchange.} The difference between
 X25519 and \mlkem{}-768 is 2{,}200 bytes; the difference between
@@ -1847,7 +1916,17 @@ to remove.
 \textbf{Revocation.} A certificate can be revoked and the revocation
 distributed. A pre-shared key cannot be un-shared. If an aircraft is
 captured, its key is compromised until every peer it could talk to has
-been re-keyed, and the operator has to know which peers those were.
+been re-keyed, and the operator has to know which peers those were. The
+magnitude is worth stating, if only as an estimate: twenty aircraft
+against three ground stations is sixty pairwise keys, and the exposure
+lasts until each of them has been replaced, which for the aircraft means
+physical or out-of-band contact --- a maintenance action of an hour each,
+so a sixty-hour campaign, and a window measured in weeks at the sortie
+rate used above rather than in hours. The certificate case is not free
+either, since a revoked chain still has to reach every station's
+revocation list, but it is a distribution problem rather than a fleet
+visit, and distribution completes in seconds over the same link that
+carries the handshake.
 
 \textbf{Scale.} A pre-shared key is pairwise. A fleet of $n$ aircraft
 and $m$ ground stations needs up to $nm$ keys, or a group key with the
@@ -1912,9 +1991,12 @@ certificate case against 0.45\,s for the classical one. The penalty
 therefore grows with handshake size in absolute terms but shrinks in
 relative terms, $+11.9$\,\% against $+22.8$\,\%, which is the
 opposite of what one would guess, and it does not reorder the
-architectures. What remains unmodelled is burstiness: independent loss
-cannot produce the deep fade that swallows several segments at once, so
-the tails here are optimistic even though the means are not. The link's
+architectures. Burstiness is bounded rather than measured:
+Section~\ref{sec:loss} nets off the two errors, showing that correlation
+of burst length $L$ divides the mean penalty by $L$ while leaving the
+ratio between configurations unchanged, and that it lengthens the worst
+stall from one RTO to $L \times 1.22$\,s. So the means here are an upper
+bound, the tails a lower one, and the ranking holds either way. The link's
 two other axes are swept rather than assumed: rate over 2.4--38.4\,\kbps{}
 (Section~\ref{sec:rate}) and one-way delay over 0--600\,ms
 (Section~\ref{sec:delay}), so the single-operating-point objection does
@@ -1935,6 +2017,19 @@ desktop core. Where the paper does use embedded figures --- the
 attributed to the literature and used to argue against a design, not to
 support one.
 
+Two different questions are easy to conflate here, and this paper
+answers only the first. \emph{Is the arithmetic affordable on a
+microcontroller?} The margin says yes by three orders of magnitude, and
+the literature measures it directly. \emph{Can a complete \tls{} stack
+run on the flight controller at all?} That is a question about RAM,
+flash, an operating system abstraction layer and a maintained port, and
+nothing in this paper bears on it --- the stack measured here needs a
+desktop operating system and would not be the one an airframe flew. An
+operator whose avionics cannot host a \tls{} stack has a different
+problem from the one this paper quantifies, and the pre-shared-key
+recommendation of Section~\ref{sec:psk} is easier to satisfy at the
+frame layer than at the session layer precisely because of that.
+
 \textbf{One stack, one version.} All measurements use OpenSSL~3.5.7.
 Another stack may frame records differently, and the 316-byte identity
 overhead in the pre-shared-key configuration and the 2{,}200-byte key
@@ -1949,13 +2044,16 @@ variation of 0.62, 0.20, 0.10 and 0.09\,\%, the classical row being the
 least stable for the reason Section~\ref{sec:attribution} gives. The
 rate sweep of Table~\ref{tab:rate} is two runs per cell and the matrix
 of Table~\ref{tab:matrix} is single-run, so those cells carry no
-interval of their own. Elsewhere the five-run spreads are 0.10\,\% for
-the certificate handshake, 0.41\,\% for the pre-shared-key one and
-0.67\,\% for the classical baseline. The smallest effect any table here
-is asked to resolve is the 1.25$\times$ between \mldsa{}-65 and
-\mldsa{}-44, a 20\,\% difference and therefore 30 times the largest of
-those coefficients. Single runs are adequate for the comparisons made,
-though not for claims finer than the ones the paper makes.
+interval of their own. Elsewhere the five-run spreads of
+Table~\ref{tab:repeat} are 0.10\,\% for the certificate handshake,
+0.41\,\% for the pre-shared-key one and 0.67\,\% for the classical
+baseline, though the pooled fifteen-run spreads of
+Section~\ref{sec:repeat} are larger --- up to 4.6\,\% --- because two
+runs in forty-five stalled. The smallest effect any table here is asked
+to resolve is the 1.25$\times$ between \mldsa{}-65 and \mldsa{}-44, a
+20\,\% difference, which is four times the largest pooled coefficient
+and thirty times the cleanest one. Single runs are adequate for the
+comparisons made at that resolution, and not for finer claims.
 
 \textbf{The chain depth is one in the main tables.} All certificates
 there are self-signed, so those numbers describe a flat hierarchy. The
@@ -2050,15 +2148,19 @@ themselves, about whether their aircraft needs to establish sessions
 with parties they were not provisioned against. Operators who can answer
 no should pre-provision and be done. Operators who must answer yes
 should budget eleven seconds per post-quantum handshake on a narrowband
-satellite link, design their session lifetimes accordingly, and watch
+satellite TLS link over TCP, and at least that over DTLS, design
+their session lifetimes accordingly, and watch
 the Merkle-tree line of work with interest, because it attacks the same
 byte budget from a different direction.
 
 Two questions remain open. First, the loss model is independent and
-memoryless; bursty fading, where a single deep fade swallows several
-segments of a 20\,kB handshake, would produce a fatter tail than
-anything reported here, and a Gilbert--Elliott channel is the natural
-next measurement. Second, the pre-shared-key recommendation
+memoryless. Section~\ref{sec:loss} bounds what correlation would change
+--- the mean penalty falls as $1/L$ for a burst length $L$, the ratio
+between configurations does not move, and a fade of $L$ segments stalls
+for $L \times 1.22$\,s against the 1.2\,s this model can produce ---
+but a measured Gilbert--Elliott trace on a real radio is still the
+honest way to replace that bound. Second, the pre-shared-key
+recommendation
 assumes a key distribution mechanism we did not analyse; for a fleet,
 that mechanism --- provisioning, rotation and revocation across
 aircraft, ground stations and mission participants --- may itself be

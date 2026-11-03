@@ -1,7 +1,7 @@
 # Post-Quantum C2 for UAVs — measurement package
 
 Target: **MDPI *Drones*** (research article, measurement-based).
-30 pages, 14 tables, 7 figures, 198-word abstract, 33 references.
+32 pages, 14 tables, 7 figures, 200-word abstract, 33 references.
 Compiles clean on TeX Live 2026 with the official MDPI class v6.5d.
 
 Reproduce with `python run_all.py` (see `REPRODUCE.md`). The author block is
@@ -92,6 +92,10 @@ harness/
   loss_low.py           0.1/0.5/1 % loss: the regime real links live in
   dtls_bound.py         RFC 9147 framing bound -- PQC DTLS cannot be measured
                         on this stack, so the overhead is computed instead
+  burst_bound.py        Gilbert-Elliott bound on what bursty fading changes:
+                        the mean penalty falls as 1/L, the ratio does not
+  repeatability_raw.py  one row per handshake behind Table 13; --runs/--out
+                        so further batches can be appended
   chain_depth.py        depth-one vs depth-two hierarchy, 3 runs each
   resumption_live.py    TLS 1.3 resumption, 5 runs, with the negative
                         control that shows why the first attempt failed
@@ -120,6 +124,8 @@ results/
   delay_sweep.csv       36 runs: 4 delays x 3 configurations x 3 repeats
   sweep_repeat.csv      20 runs: 4 certificate algorithms x 5 repeats
   loss_low.csv          60 runs: 4 loss rates x 3 configurations x 5 repeats
+  repeatability_raw.csv 15 runs: 3 configurations x 5, one row per handshake
+  repeatability_raw2.csv / _3.csv  two further batches of the same kind
   oneway.csv            12 runs: mutual vs server-only, 2 configurations x 3
   compute_cost.json     per-operation timings from openssl speed, and the
                         compute share of each measured handshake
@@ -178,7 +184,7 @@ cd manuscript
 pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 
-Expected: 30 pages, 0 undefined references, 0 overfull boxes, 33 bibitems.
+Expected: 32 pages, 0 undefined references, 0 overfull boxes, 33 bibitems.
 
 To see the ticket artefact yourself:
 
