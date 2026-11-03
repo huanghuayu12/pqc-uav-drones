@@ -1118,3 +1118,32 @@ Is the Binding Constraint"*，本稿标题是 *"Where the Bytes Go: …"*。前�
 ### 20.5 状态
 
 **33 页、14 表、7 图、33 引用、41 标签、摘要 200 词、0 overfull、0 error、0 undefined。**
+
+## 21. 第四轮外部审稿（major revision，偏轻）的处理（2026-11-03）
+
+审稿基线是较旧的 PDF：其 8 条主要意见中，「p3 贡献列表重复段」「p22 乱码」
+「Table 12 缺失」「Table 1 FN-DSA 行格式」「编号混乱」均已在上一轮修复，
+本轮用 Ghostscript 逐页渲染核实（`.render/`）。真实存在的问题及修复：
+
+1. **4 字节差额（Table 3 / 正文 / Figure 1）**——实测定位：tickets enabled
+   时客户端 ClientHello 多出空的 `session_ticket` 扩展（type 35, len 0），
+   1,357→1,361 B；两个方向分别 +11,392 / +4，合计 +11,396。已写入 3.3(5)
+   与 Table 3 题注。复现脚本 `.render/ticket_probe.py`、`ch_probe.py`。
+2. **4.4 的 "18,928 in four of five rows"**——实为 18,925–18,928；已改为给出
+   每行绝对字节数（20,658 vs 1,913；20,840 vs 1,912–1,915）。
+3. **5.3 链深算术**——5,544/11,088/160 的口径混乱重写为
+   220 = 2×27 + 2×5 + 2×78（重新生成层级证书实测 DER 5,514/5,541/5,592）；
+   "238 bytes / three-byte header" 改为 253 X.509 + 35 TLS = 5,549。
+4. **Table 13（ladder）经典行 1,914/1.98**——无批次依据，改 1,915/1.99。
+5. **新增 Table 6（批次索引）**——四个经典 baseline（1,912/1,913/1,915/1,916）
+   各自批次与用途一表列清；rate/delay sweep 另成批次按行内取比。
+6. 摘要与结论的 FN-DSA-512 加 "extrapolated"；摘要同时给出 7.2 与 7.8 两个口径
+   （词数恰好 200）。
+7. 措辞软化：PSK 前提条件、DTLS framing-only 下界、"measured range"、
+   2.3 的 [xia] 解读、5.6 桌面 OS 句、3.2 chunk-size 未扫描列入 limitation。
+8. 5.2 给出 s_server 完整命令行，并声明只在 3.5.7 上验证。
+9. Data Availability 逐一列出脚本；README 新增「表/图 ↔ 脚本」映射表。
+10. Table 4 的 PSK 行 identity share 说明移入正文；Table 7 的逐字节分解移入正文。
+
+编译：34 页、0 overfull、0 未定义引用、33 条文献；check_tex 通过。
+新增 RESPONSE-5.md。遗留：28 个 `<<...>>` 占位符（作者信息）。

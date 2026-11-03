@@ -111,6 +111,7 @@ texorpdfstring url si linewidth textwidth textheight columnwidth
 item description enumerate hline toprule midrule bottomrule tabular table figure
 small footnotesize scriptsize tiny large Large normalsize
 texttt textrm textsf textsc textsl underline mbox hbox vbox par noindent
+path raggedright ttfamily quote
 to rightarrow leftarrow times div ast sim simeq neq ll gg subset sigma pm
 dagger ddagger S P copyright registered textdegree degree celsius
 abbreviations nolinkurl href emph textsuperscript textsubscript

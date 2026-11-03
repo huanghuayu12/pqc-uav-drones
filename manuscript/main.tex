@@ -5,13 +5,13 @@
 %  Definitions/ holds the official MDPI class (v6.5d, 2026-10-19) as
 %  downloaded from res.mdpi.com.  Build with
 %      pdflatex main && bibtex main && pdflatex main && pdflatex main
-%  Verified on TeX Live 2026 / pdfTeX 1.40.29: 23 pages, 0 undefined
-%  references, 0 overfull boxes, 29 bibliography entries, 11 tables,
+%  Verified on TeX Live 2026 / pdfTeX 1.40.29: 33 pages, 0 undefined
+%  references, 0 overfull boxes, 33 bibliography entries, 15 tables,
 %  7 figures.
 %
 %  BEFORE SUBMITTING
-%  Replace all 17 <<...>> placeholders: the author and affiliation block
-%  at the top, and the repository URL in the data-availability statement.
+%  Replace all 28 <<...>> placeholders: the author and affiliation block
+%  at the top (12), the CRediT roles (15) and the funding sentence (1).
 %  Figures m1..m6 (.pdf) and references.bib must sit next to this file.
 %
 %  NUMBER PROVENANCE -- read this before editing any table
@@ -86,9 +86,10 @@ seconds, does not. On TLS~1.3 over TCP, on an emulated 9.6\,\kbps{}/250\,ms
 link with mutual authentication and a self-signed, depth-one chain,
 18{,}310 of the 20{,}840 bytes an \mlkem{}-768\,$+$\,\mldsa{}-65
 handshake sends are certificate, signature and the records carrying
-them --- 7.2 times the key exchange, with the wire agreeing to the byte.
-\fndsa{}-512 gains only 12--13\,\% over \mldsa{}-44: not worth a draft
-standard. One intermediate certificate costs 11{,}248 bytes, more than
+them --- 7.2 times the key exchange on the wire, 7.8 on the standards
+objects alone, with the wire agreeing to the byte.
+\fndsa{}-512, extrapolated along the measured slope, gains only
+12--13\,\% over \mldsa{}-44: not worth a draft standard. One intermediate certificate costs 11{,}248 bytes, more than
 any signature change saves. The penalty is neither rate- nor
 delay-invariant: 8.64$\times$ to 3.07$\times$ across 2.4--38.4\,\kbps{},
 6.7$\times$ at 40\,ms low-Earth orbit, so the geostationary figures are
@@ -157,7 +158,9 @@ What the standards do not give is whether a production stack reproduces
 that arithmetic, what the split costs in seconds on a link where seconds
 are the budget, and which of the available remedies is worth most. We
 measure the first, convert it into the second, and rank the third. The
-ratio on the wire is 7.2 to 1 in favour of identity material, and it
+ratio on the wire is 7.2 to 1 in favour of identity material --- lower
+than the object ratio, because framing inflates the smaller term faster,
+as Section~\ref{sec:arithmetic} accounts for --- and it
 reorganises the problem: the migration cost is set by the public-key
 infrastructure, not by the lattice arithmetic.
 
@@ -338,9 +341,11 @@ than a breakdown, so it cannot say whether the bytes sit in key
 exchange or in identity material. And 1{,}836 bytes is 4.1\,\%
 \emph{below} our classical X25519$+$ECDSA-P256 baseline of 1{,}915
 bytes (Table~\ref{tab:matrix}) --- which is what a handshake costs when
-no certificate chain is on the wire, and is consistent with a
-pre-provisioned design. Read that way, the one published UAV byte count
-we can compare against is evidence for the thesis we test below:
+no certificate chain is on the wire. A pre-provisioned design is one
+explanation for that figure, though a single total cannot distinguish it
+from a handshake that simply carried a shorter chain, and we claim only
+the first reading. Read that way, the one published UAV byte count
+we can compare against is consistent with the thesis we test below:
 removing the chain dominates every choice made inside it.
 
 Industrial designs reach a related conclusion from the
@@ -503,7 +508,14 @@ TCP coalesces a flight of segments into one chunk, so chunk boundaries
 tend to coincide with the direction changes where a delay is genuinely
 owed. We therefore report the propagation term as an upper bound of at
 most a handful of delay periods, which at 250\,ms is under a second on
-the largest handshake.
+the largest handshake. That argument is an argument, not a measurement:
+we did not sweep the chunk size, because the proxy forwards whatever
+\texttt{recv} returns rather than a configured block, so the number of
+delay payments follows the sender's segmentation rather than a parameter
+of ours. A path that charged delay per smaller unit would pay more of
+them, which moves the absolute times up and leaves the ratio between
+configurations where it is; Section~\ref{sec:threats} records this as a
+limitation.
 
 Second, the round-trip time is the sum of the configured propagation
 delay and the serialisation time of whatever is in flight. At
@@ -592,6 +604,12 @@ server-side flag omitted the same two records become 5{,}775 bytes each,
 framing. The server to client direction
 grew from 10{,}468 to 21{,}860 bytes, and the handshake total from
 20{,}840 to 32{,}236 bytes, an inflation of 54.7\,\%.
+The client's flight gains four bytes at the same time, and those are
+not an artefact: with tickets enabled the client offers the empty
+\texttt{session\_ticket} extension, which \texttt{-no\_ticket}
+suppresses, so its \texttt{ClientHello} grows from 1{,}357 to 1{,}361
+bytes. The two directions therefore grow by 11{,}392 and 4 bytes, and
+the 11{,}396-byte growth of the total is their sum.
 Client-side \texttt{-no\_ticket} does not suppress it, because the
 ticket is emitted by the server after the handshake. The server must be
 given the flag as well.
@@ -615,7 +633,12 @@ would have overstated it by 54.7\,\%.}
 Section~\ref{sec:pitfalls}, item~(5), for
 \mlkem{}-768\,$+$\,\mldsa{}-65. Server to client records are listed in
 transmission order, so the last three entries of each row are the
-post-handshake records. Only these three differ between the two rows.}
+post-handshake records. Only these three differ between the two rows.
+The client to server flight is not shown and grows by four bytes ---
+10{,}372 to 10{,}376 --- which is the empty \texttt{session\_ticket}
+extension the client offers only when tickets are enabled. The two
+flights therefore account for 11{,}392 and 4 of the 11{,}396-byte
+total.}
 \label{tab:records}
 \centering
 \begin{tabular}{llr}
@@ -633,7 +656,7 @@ pushed in the direction of our hypothesis, and a less careful
 investigation would have kept it. The published literature on PQC
 certificate chains reports figures in this range, and a 32\,kB handshake
 is not obviously wrong. What caught it was not intuition but arithmetic:
-the 5{,}759-byte records are not explicable from any field in the
+the 5{,}775-byte records are not explicable from any field in the
 handshake, and once a record cannot be attributed it has to be
 investigated rather than averaged in.
 
@@ -813,6 +836,14 @@ size is not where the leverage is.}
 \label{fig:breakdown}
 \end{figure}
 
+Two of the six rows are pre-shared-key configurations, and their
+identity column is not identity material at all: with no certificate on
+the wire it holds only \texttt{Finished} and framing, which is why the
+share column reads 10.9\,\% for the post-quantum row and 45.0\,\% for
+the classical one. Those rows are there to show what remains after the
+identity term is removed, not to be compared with the 87.9\,\% above
+them.
+
 The result is stark. Holding the certificate fixed and changing the key
 exchange from X25519 to \mlkem{}-768 adds 2{,}202 bytes. Holding the
 key exchange fixed and changing the certificate from ECDSA-P256 to
@@ -881,15 +912,36 @@ made. The classical baseline is not, because an ECDSA signature is
 variable-length DER --- the integers $r$ and $s$ gain a leading zero
 byte whenever the value behind them is small --- so the certificate and
 each \texttt{CertificateVerify} move by a byte or two between runs.
-The classical baseline measures 1{,}912, 1{,}913, 1{,}915 and 1{,}916
-bytes in the batches behind Tables~\ref{tab:loss},
-\ref{tab:breakdown}, \ref{tab:matrix} and \ref{tab:repeat}
-respectively. Each table reports the values from the batch that
-produced it, and \emph{ratios are compared only within one batch}: the
-certificate penalty is 5.66$\times$ in the sweep of
-Table~\ref{tab:matrix} and 5.67$\times$ in the repeats of
-Table~\ref{tab:repeat}, a spread of 0.2\,\%, and no conclusion
-depends on which baseline is used.
+Table~\ref{tab:batches} collects the four values that appear in this
+paper and says which tables report each. Each table reports the values
+from the batch that produced it, and \emph{ratios are compared only
+within one batch}: the certificate penalty is 5.66$\times$ in the sweep
+of Table~\ref{tab:matrix} and 5.67$\times$ in the repeats of
+Table~\ref{tab:repeat}, a spread of 0.2\,\%, and no conclusion depends
+on which baseline is used.
+
+\begin{table}[H]
+\caption{The four classical baselines in this paper, one per batch,
+with the tables that report each. The whole spread is four bytes, which
+is the DER variation described in the text; the post-quantum handshakes
+do not move. Ratios are formed within a batch, never across two, and
+the rate and delay sweeps of Tables~\ref{tab:rate} and~\ref{tab:delay}
+are further batches whose ratios are formed row by row, so each of their
+rows carries its own baseline and neither is listed here.}
+\label{tab:batches}
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Batch & Reported in & Classical (B) & PQC (B) \\
+\midrule
+Loss sweep, 8 runs per cell & Table~\ref{tab:loss} & 1{,}912 & 20{,}840 \\
+Attribution                 & Tables~\ref{tab:breakdown}, \ref{tab:messages}; Figure~\ref{fig:breakdown} & 1{,}913 & 20{,}840 \\
+Matrix                      & Tables~\ref{tab:matrix}, \ref{tab:psk}, \ref{tab:ladder} & 1{,}915 & 20{,}840 \\
+Repeatability, 5 runs       & Table~\ref{tab:repeat} & 1{,}916 & 20{,}840 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Where the 20{,}840 Bytes Come From}
 \label{sec:arithmetic}
@@ -918,12 +970,7 @@ Section~\ref{sec:method}, and the post-handshake records. Byte counts in
 this table include the 5-byte \tls{} record header; the key-exchange
 totals quoted in the text are payload-only and are therefore 10 bytes
 smaller for the two hello messages, which is the 2{,}530 of
-Table~\ref{tab:breakdown}. Every row decomposes exactly: the 5{,}549-byte
-\texttt{Certificate} is 35 bytes of \tls{} framing --- 5 record header,
-16 AEAD tag, 4 handshake header, 1 content type, 1 context length,
-3 list length, 3 certificate length and 2 extensions length --- plus the
-5{,}514-byte DER, which in turn is 1{,}952 of public key, 3{,}309 of
-signature and 253 of X.509 frame.} 
+Table~\ref{tab:breakdown}.} 
 \label{tab:messages}
 \centering
 \small
@@ -957,10 +1004,23 @@ with Table~\ref{tab:breakdown}, they total 2{,}530 bytes or 12.1\,\%
 of the handshake; of those, 2{,}288 carry the actual key material
 (1{,}184 bytes of \mlkem{} public key and 1{,}088 of ciphertext, plus
 extension headers) and the rest is \tls{} machinery. The identity
-material is 18{,}310 bytes. The mechanism is therefore visible per
-message as well as in aggregate: it is not that \mlkem{} is large, it
-is that there are two certificates and two signatures, and each of the
-four is larger than the entire key exchange.
+material is 18{,}310 bytes.
+
+Every row of the table can be checked against the standards rather than
+against another measurement, and the largest row is the one worth
+checking. The 5{,}549-byte \texttt{Certificate} is 35 bytes of \tls{}
+framing --- 5 of record header, 16 of AEAD tag, 4 of handshake header, 1
+of content type, 1 of context length, 3 of list length, 3 of certificate
+length and 2 of extensions length --- plus 5{,}514 bytes of DER; that
+DER is in turn 1{,}952 of \mldsa{}-65 public key, 3{,}309 of signature
+and 253 of X.509 framing (version, serial, algorithm identifiers, names,
+validity, extensions and the signature wrapper). The same three numbers
+appear in every certificate in this paper, which is why a chain of $n$
+certificates costs what it does in Section~\ref{sec:chain}. The
+mechanism is therefore visible per message as well as in aggregate: it
+is not that \mlkem{} is large, it is that there are two certificates and
+two signatures, and each of the four is larger than the entire key
+exchange.
 
 The two ratios quoted in the introduction differ for a reason worth
 naming. The 7.8 uses the standard object sizes alone, 17{,}646 against
@@ -1140,13 +1200,17 @@ without the sweep would have overstated the migration cost at high rate
 and understated it at low rate, and the understatement matters more,
 because it is the narrow links that need the migration most.
 
-\textbf{Why the ratio moves while the byte difference does not.} The
-byte gap is 18{,}928 bytes in four of the five rows and 18{,}745 in the
-2.4\,\kbps{} row. Two separate artefacts push that row 183 bytes lower:
-its pre-shared-key-free handshake counts 182 bytes fewer, and its
-classical baseline counts one byte more. Both are the window-boundary
-effect described at the end of this subsection, and neither changes a
-ratio in the third significant figure. What changes is how much of the
+\textbf{Why the ratio moves while the byte difference does not.} At
+2.4\,\kbps{} the row reads 20{,}658 bytes against a 1{,}913-byte
+classical baseline, a gap of 18{,}745; the four faster rows read 20{,}840
+against baselines of 1{,}912 to 1{,}915, gaps of 18{,}925 to 18{,}928.
+So the gap is constant to within four bytes above 2.4\,\kbps{} and 183
+bytes lower at the slowest rate, and both halves of that 183 have the
+same cause, the window-boundary effect described at the end of this
+subsection: the certificate handshake counts 182 bytes fewer (20{,}658
+against 20{,}840) and the classical baseline one byte more (1{,}913
+against 1{,}912 at 19.2\,\kbps{}). Neither changes a ratio in the third
+significant figure. What changes is how much of the
 completion time is serialisation. At 38.4\,\kbps{} the
 classical handshake takes 1.30\,s, of which serialising its larger
 direction (1{,}048 bytes) accounts for 0.22\,s; at 2.4\,\kbps{} it
@@ -1168,7 +1232,8 @@ against the 1.25$\times$ that the largest signature-algorithm change
 available (\mldsa{}-65 down to \mldsa{}-44) delivers at 9.6\,\kbps{}
 --- and the certificate rows of Table~\ref{tab:rate} show the penalty
 growing, not shrinking, as the link narrows, so the gap between the two
-kinds of remedy only widens as the link gets harder.
+kinds of remedy widens across the measured range. Below 2.4\,\kbps{} we
+have no measurement, and the trend is an extrapolation there.
 
 One number needs a caveat. The 2.4\,\kbps{} row counts 20{,}658 bytes
 rather than 20{,}840, 0.9\,\% fewer. The record decomposition at that
@@ -1592,7 +1657,7 @@ Configuration & Handshake bytes & Time (s) & Source \\
 \mlkem{}-768 $+$ \fndsa{}-512 & 13{,}444 & 7.88  & \emph{predicted} \\
 \mlkem{}-768 $+$ \mldsa{}-44  & 16{,}004 & 9.02  & measured \\
 \mlkem{}-768 $+$ pre-shared key & 2{,}902 & 3.32 & measured \\
-X25519 $+$ ECDSA-P256         & 1{,}914  & 1.98  & measured \\
+X25519 $+$ ECDSA-P256         & 1{,}915  & 1.99  & measured \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1779,10 +1844,21 @@ save. Every other measurement in this paper runs with
 
 With tickets enabled, resumption is measurable, but only for
 server-authenticated handshakes. OpenSSL 3.5.7's \texttt{s\_server}
-issues no ticket whenever client authentication is requested ---
-\texttt{-verify 0}, \texttt{-Verify 0} and \texttt{-Verify 1} were each
-tried, and a ticket appears only when client authentication is off
-altogether. The reason is in the mode rather than in a bug: a resumed
+issues no ticket whenever client authentication is requested. The
+invocation, with \texttt{-verify 0} and \texttt{-Verify 1} substituted
+in turn for the last option pair, is
+
+\begin{quote}
+\raggedright\ttfamily
+openssl s\_server -accept 4433 -tls1\_3 -groups MLKEM768\\
+-cert leaf.pem -key leaf.key -CAfile leaf.pem -Verify 0
+\end{quote}
+
+\noindent No variant sent a \texttt{NewSessionTicket}, and a ticket
+appears only when the request for a client certificate is dropped
+altogether. All three were run on 3.5.7 only: we did not test other
+patch releases, and the claim is scoped to the version measured. The
+reason is in the mode rather than in a bug: a resumed
 \tls{}~1.3 handshake authenticates with the PSK and runs no certificate
 authentication in either direction, so a server that requires a client
 certificate on every connection has nowhere to get one from. RFC~8446
@@ -1878,26 +1954,29 @@ Difference                  & $+$11{,}248 & $+$4.94 & \\
 \end{tabular}
 \end{table}
 
-\textbf{Where the 160 bytes beyond a naive estimate go.} A first
-estimate treats the intermediate as a copy of the leaf and predicts
-$2\times5{,}544=11{,}088$ bytes; the measurement is 11{,}248. The gap
-resolves to the byte, and the resolution is worth recording because it
-is a property of hierarchies rather than of this testbed. An
-\mldsa{}-65 intermediate certificate encodes to 5{,}541 bytes, and each
-\tls{} list entry adds a three-byte length and a two-byte extension
-field, so the two intermediates account for 11{,}092. The remaining 156
-bytes are the leaf growing from 5{,}514 to 5{,}592 bytes when it stops
-being self-signed: a certificate that is verified against a parent
+\textbf{Where the 220 bytes beyond a naive estimate go.} A first
+estimate treats the intermediate as a copy of the self-signed leaf and
+predicts $2\times5{,}514=11{,}028$ bytes; the measurement is 11{,}248,
+220 more. The gap resolves to the byte, and the resolution is worth
+recording because it is a property of hierarchies rather than of this
+testbed. An \mldsa{}-65 intermediate certificate encodes to 5{,}541
+bytes, 27 more than the leaf, and each \tls{} list entry adds a
+three-byte length and a two-byte extensions field, so the two
+intermediates account for $2\times(5{,}541+5)=11{,}092$. The remaining
+156 bytes are the leaf growing from 5{,}514 to 5{,}592 bytes when it
+stops being self-signed: a certificate that is verified against a parent
 rather than against itself carries \texttt{extendedKeyUsage} and
 \texttt{subjectAltName}, which the self-signed leaf does not need.
-$2\times5{,}546+2\times78=11{,}248$.
+Thus $2\times5{,}546+2\times78=11{,}248$, and the 220 is $2\times27$ for
+the intermediate's longer encoding, $2\times5$ for the list framing and
+$2\times78$ for the leaf's growth.
 
 \textbf{Why this is the more useful number.} The per-direction
 figure can also be checked against the standard rather than against
 another paper: an \mldsa{}-65 certificate carries a 1{,}952-byte public
-key and a 3{,}309-byte signature \cite{fips204}, leaving 238 bytes for
-names, validity and extensions, which is the 5{,}549-byte record of
-Table~\ref{tab:records} once the three-byte \tls{} header is counted.
+key and a 3{,}309-byte signature \cite{fips204}, leaving 253 bytes of
+X.509 framing, which with the 35 bytes of \tls{} framing is the
+5{,}549-byte record of Table~\ref{tab:records}.
 Both routes agree, which is what makes the depth-two result safe to
 extrapolate further.
 
@@ -2022,7 +2101,10 @@ two other axes are swept rather than assumed: rate over 2.4--38.4\,\kbps{}
 not apply to the ratio. What the delay sweep cannot settle is the
 absolute value of its slope, which is a property of how the emulator
 charges delay (Section~\ref{sec:delay}); only the ratio between
-configurations is read from it.
+configurations is read from it. Nor was the chunk size swept, for the
+reason Section~\ref{sec:link} gives: a path that paid delay per smaller
+unit would move the absolute times up and leave the ratios where they
+are.
 
 \textbf{The computation is measured on the host, not on a flight
 controller.} The arithmetic of the handshake was timed on the machine
@@ -2042,8 +2124,10 @@ microcontroller?} The margin says yes by three orders of magnitude, and
 the literature measures it directly. \emph{Can a complete \tls{} stack
 run on the flight controller at all?} That is a question about RAM,
 flash, an operating system abstraction layer and a maintained port, and
-nothing in this paper bears on it --- the stack measured here needs a
-desktop operating system and would not be the one an airframe flew. An
+nothing in this paper bears on it --- the stack measured here is a
+production \tls{} implementation running on a desktop operating system,
+and whether it ports to a given avionics platform is the separate
+question this paper does not address. An
 operator whose avionics cannot host a \tls{} stack has a different
 problem from the one this paper quantifies, and the pre-shared-key
 recommendation of Section~\ref{sec:psk} is easier to satisfy at the
@@ -2111,7 +2195,7 @@ Tables~\ref{tab:sweep} and \ref{tab:psk}, which differ from the
 five-run means of Table~\ref{tab:repeat} by at most 0.02\,s; no
 difference quoted here is affected.) Shrinking the signature scheme
 from \mldsa{}-65 to \mldsa{}-44 saves
-2.25\,s; extrapolating to \fndsa{}-512 saves a further 1.15\,s and
+2.25\,s; the extrapolated \fndsa{}-512 point saves a further 1.15\,s and
 carries a draft standard, a 2.3$\times$ slower signature and 40--57\,kB
 of key state. Removing the certificate entirely, by replacing
 certificate authentication with a \tls{}~1.3 external pre-shared key,
@@ -2157,8 +2241,9 @@ smaller denominator faster than a large one. The net effect is that the
 geostationary 5.66$\times$ is the mildest value any single-hop link
 will see: a low-Earth-orbit path should expect 6.71$\times$ and the
 zero-latency control 7.00$\times$, and only a two-hop path buys the
-ratio down. The headline is therefore conservative for every link an
-operator is likely to buy, which is the direction an error in a
+ratio down. The headline is therefore conservative for any single-hop
+link in the measured range --- 0 to 600\,ms of one-way delay, 2.4 to
+38.4\,\kbps{} --- which is the direction an error in a
 migration study should point.
 
 The design implication is uncomfortable but clear. The intervention
@@ -2166,9 +2251,13 @@ that matters is not an algorithm choice that a standards body will make
 for the operator; it is an architectural choice the operator must make
 themselves, about whether their aircraft needs to establish sessions
 with parties they were not provisioned against. Operators who can answer
-no should pre-provision and be done. Operators who must answer yes
+no should pre-provision if they already run a key-distribution
+mechanism, and be done. Operators who must answer yes
 should budget eleven seconds per post-quantum handshake on a narrowband
-satellite TLS link over TCP, and at least that over DTLS, design
+satellite \tls{} link over TCP, and at least that over DTLS --- the
+4\,\% figure of Section~\ref{sec:scope} is a framing-only bound and
+excludes IP and UDP headers and flight-level retransmission, both of
+which raise it --- design
 their session lifetimes accordingly, and watch
 the Merkle-tree line of work with interest, because it attacks the same
 byte budget from a different direction.
@@ -2209,7 +2298,23 @@ the record-layer parser are available at
 measurements underlying
 Tables~\ref{tab:breakdown}--\ref{tab:repeat} are stored as CSV and JSON
 alongside them, and every figure in this paper is generated from those
-files by the included plotting script.}
+files by the included plotting script. The scripts behind the
+individual results are \path{harness/link_measure.py} (every
+handshake time and byte count), \path{harness/record_breakdown.py}
+(Tables~\ref{tab:records}, \ref{tab:breakdown} and~\ref{tab:messages}
+and Figure~\ref{fig:breakdown}), \path{harness/rate_sweep.py},
+\path{harness/delay_sweep.py} and \path{harness/loss_sweep.py}
+(Tables~\ref{tab:rate}, \ref{tab:delay} and~\ref{tab:loss}),
+\path{harness/chain_depth.py} (Table~\ref{tab:chain}),
+\path{harness/repeatability_raw.py} (Table~\ref{tab:repeat}), and
+\path{harness/oneway.py}, \path{harness/dtls_bound.py},
+\path{harness/compute_cost.py} and \path{harness/burst_bound.py};
+\path{README.md} maps each figure and table to the script that produces
+it. Table~\ref{tab:messages} is
+the one table that is not read off the wire: its byte column is
+measured, but its contents column is arithmetic on FIPS~203/204 and
+X.509 framing, and is reproducible by hand from the sizes quoted in its
+caption.}
 
 \conflictsofinterest{The authors declare no conflicts of interest.}
 
