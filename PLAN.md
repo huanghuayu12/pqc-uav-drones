@@ -1147,3 +1147,16 @@ Is the Binding Constraint"*，本稿标题是 *"Where the Bytes Go: …"*。前�
 
 编译：34 页、0 overfull、0 未定义引用、33 条文献；check_tex 通过。
 新增 RESPONSE-5.md。遗留：28 个 `<<...>>` 占位符（作者信息）。
+
+## 22. AHPCAI 2026 六页 EI 会议短文（2026-11-05）
+
+- 选题：测量方法论（五个陷阱 + 检测协议），刻意与期刊版错开贡献：
+  期刊版卖结论（迁移成本与 remedy 排序），本短文卖"测量怎么被做错"。
+- 官方 spie.cls v3.25（CTAN 下载，TinyTeX 无此包，直接放进 conference/）。
+- 会议短文自建 refs.bib（12+1 条，自 measurepackage 指向仓库）。
+- 作者：黄晓宇（通讯）/韩益亮/朱率率/吴悔/刘忠强，单位 1,2 双署。
+- 致谢按 SPIE AI 政策声明了 AI 编码工具的使用。
+- main.pdf：6 页整，0 overfull，0 未定义引用；逐页 Ghostscript 渲染核对。
+- 截稿 2026-11-06 23:59；投稿、加秘书微信、查重、缴费见
+  conference/SUBMIT-CHECKLIST.md。
+- 提醒：期刊版（Drones）后续必须引用本会议版并说明扩展关系。

@@ -6,6 +6,11 @@
 archive/
 
 # LaTeX intermediates
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
 manuscript/*.aux
 manuscript/*.log
 manuscript/*.bbl
