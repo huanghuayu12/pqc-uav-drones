@@ -1160,3 +1160,16 @@ Is the Binding Constraint"*，本稿标题是 *"Where the Bytes Go: …"*。前�
 - 截稿 2026-11-06 23:59；投稿、加秘书微信、查重、缴费见
   conference/SUBMIT-CHECKLIST.md。
 - 提醒：期刊版（Drones）后续必须引用本会议版并说明扩展关系。
+
+## 23. 会议短文改排官方 Word 模板（2026-11-05）
+
+- 组委会下发的模板是 Word 版（ProcSPIETemplate_A4.docx，A4，
+  边距 1.93/1.93/2.54/4.95 cm），不是 LaTeX。
+- 新增 conference/build_docx.py：main.tex 仍是唯一内容源，脚本把正文
+  自动排进官方模板（SPIE 专属样式：paper title / Authors-Affils /
+  abstract / Heading 1-2 / body text / figure caption / reference listing），
+  上标式引文编号与 bbl 序号一致，两表边框为 SPIE 三线式，图用 600 dpi PNG。
+- 用本机 Word COM 导出 PDF 并计页：6 页整。
+- 渲染逐页核对，修掉三处转换缺陷：$\\to$ 未转换、表格内 \\quad/\\emph 残留、
+  参考文献双编号（样式自带 [n] 又加了手写序号）及 \\bibliographystyle 残留。
+- 投稿文件：AHPCAI2026_Huang.docx / .pdf；LaTeX 版保留作备份。

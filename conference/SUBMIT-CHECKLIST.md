@@ -1,6 +1,12 @@
 # AHPCAI 2026 投稿清单（短文版）
 
-论文：`conference/main.pdf`（6 页，SPIE proceedings 格式，官方 `spie.cls` v3.25 编译）
+论文（投稿用）：**`conference/AHPCAI2026_Huang.docx`** 与 **`conference/AHPCAI2026_Huang.pdf`**
+（6 页，直接用会议下发的官方 SPIE A4 Word 模板排版，Word 导出 PDF）。
+
+- 纸型 A4，页边距左右 1.93 cm / 上 2.54 / 下 4.95 cm，正文 10pt Times 单栏 —— 全部继承自官方模板样式。
+- 正文源仍是 `conference/main.tex`（内容唯一来源）；`build_docx.py` 把它自动排进 Word 模板。
+  改文字请改 main.tex 后重跑 `python build_docx.py`，再用 Word 另存 PDF。
+- LaTeX 版（`main.pdf`，spie.cls Letter 版）保留作备份，投稿以 Word 版为准。
 
 ## 论文信息
 
@@ -28,7 +34,7 @@
 
 ## 你还需要做的（机器做不了的部分）
 
-1. 在艾思科蓝注册并提交 `main.pdf`（同时备好 `main.tex`/`refs.bib`/`fig-artefact.pdf`/`spie.cls`/`spiebib.bst` 以备需要源码）。
+1. 在艾思科蓝注册并提交 `AHPCAI2026_Huang.docx`（或其 PDF）；备好 `main.tex` 等源文件以防组委会要源码。
 2. **投稿后须主动加会议秘书微信**，跟进审稿状态（会议明文要求）。
 3. 查重：会议建议 iThenticate 自费查重；可在校内图书馆或审稿前自测。
 4. 录用后缴费、注册（注册费含一位作者参会名额；线上/线下双会场）。
@@ -40,7 +46,9 @@
 - 所有数字来自仓库 `results/*.csv`，由 `harness/link_measure.py`、
   `harness/record_breakdown.py`、`harness/session_ticket_probe.py` 产出；
   Figure 1 复用 `manuscript/m5_artefact.pdf`。
-- 编译：`cd conference && pdflatex main && bibtex main && pdflatex main && pdflatex main`
+- Word 版构建：`cd conference && python build_docx.py`，再用 Word 打开
+  `AHPCAI2026_Huang.docx` 导出 PDF（本机已验证 6 页）。
+- LaTeX 备份版：`pdflatex main && bibtex main && pdflatex main && pdflatex main`
   → 6 页、0 overfull、0 未定义引用。
 - SPIE AI 政策：致谢中已声明测量程序开发使用了 AI 编码工具、结果由作者复核。
 
