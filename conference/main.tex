@@ -90,7 +90,7 @@ independent ways at once: a mutual-authentication TLS~1.3 handshake
 carrying ML-KEM-768 and ML-DSA-65\cite{fips203,fips204}, measured over
 an emulated 9.6-kbps, 250-ms beyond-line-of-sight command-and-control
 link of the kind surveyed in\cite{zeng2016} and specified
-in\cite{do362}, carrying \mav{} telemetry\cite{mavlink}, where the
+in\cite{do362}, carrying MAVLink telemetry\cite{mavlink}, where the
 whole handshake takes eleven seconds and every artefact is worth
 seconds. The contributions are the failure catalogue
 (Section~\ref{sec:pitfalls}), a detection protocol assembled from the
@@ -394,14 +394,13 @@ modes of the measurement itself, which are exactly what a byte-level
 methodology paper can contribute. UAV-specific studies report a single
 capture\cite{xia2024ligkyx} or a simulation\cite{hussien2026pqmavlink},
 in neither case with a stated accounting convention. Our own record is
-no cleaner than the field's, which is the reason for this paper: we
-reported at one point that OpenSSL 3.5.7 could not resume a TLS~1.3
-session at all, when the correct reading was that this server, in this
-configuration, issues no ticket to resume from --- the observation that
-falsified the first reading was the absence of a
-\texttt{NewSessionTicket} record in the log, not a different statistic.
-Every correction in this paper is stated with the observation that
-falsified the previous reading.
+no cleaner than the field's, which is the reason for this paper: for a
+while we attributed the oversized tickets of pitfall~5 to resumption
+rather than to \texttt{-CAfile}, and the plausibility argument behind
+that reading was no weaker than the one behind the correct reading.
+Every correction here is therefore stated with the observation that
+falsified the previous one --- for pitfall~5, a 5{,}759-byte record with
+no field inside it large enough to explain the size.
 
 \section{CONCLUSION}
 \label{sec:conclusion}

@@ -1186,3 +1186,12 @@ Is the Binding Constraint"*，本稿标题是 *"Where the Bytes Go: …"*。前�
   结尾约 130 词；图 1 由 11 cm 缩至 9.6 cm；表内行距 2pt→1pt；标题前距 12→10pt。
 - Word 版 6 页整（COM 计页）；LaTeX 版 7 页，投稿以 Word 版为准。
 - build_docx.py 的 CITE 映射与 28 条格式化文献同步更新（从重建的 bbl 提取）。
+
+## 25. 会议短文收尾核对（2026-11-05）
+
+- §6 Related Work 里那句「我们自己也曾诊断错」原来引用了期刊版 §5.2 的
+  resumption 误判——本短文没有那节，读者无从核对。改为引用本文陷阱 5 的
+  `-CAfile` 误归因，并给出推翻它的那条观测（5,759 字节记录无字段可解释）。
+- 修掉 `\mav{}` 未定义宏（Word 版靠 build_docx 的替换侥幸正常，LaTeX 版报错）。
+- LaTeX 备份版：7 页 / 0 overfull / 0 未定义；Word 版：6 页整（COM 计页）。
+- 28 条文献，[1]–[7] 在 p5，[8]–[28] 在 p6，编号连续无重复。
