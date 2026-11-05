@@ -62,9 +62,14 @@ constrained links, unmanned aerial vehicles, measurement pitfalls}
 
 Post-quantum cryptography has moved from standards to deployment:
 FIPS~203 and FIPS~204 specify ML-KEM and ML-DSA\cite{fips203,fips204},
-X.509 encodings exist\cite{rfc9881}, and mainstream libraries ship
-implementations\cite{openssl35}. A growing literature measures what the
-primitives cost on the platforms that will have to run them, from
+FIPS~205 adds SLH-DSA\cite{fips205}, X.509 identifiers exist for
+both\cite{rfc9881,rfc9909}, and mainstream libraries ship
+implementations\cite{openssl35}. The migration is forced by Shor's
+algorithm\cite{shor1997} and by the harvest-now-decrypt-later argument
+that Mosca's inequality quantifies\cite{mosca2018}; the process behind
+the standards is documented in\cite{nistir8105} and surveyed
+in\cite{bernstein2017,pqcryptoBook}. A growing literature measures what
+the primitives cost on the platforms that will have to run them, from
 Cortex-M4 cycle counts\cite{pqm4,botros2019} to TLS handshake timings on
 desktop stacks\cite{paquin2020,sikeridis2020ndss}, and the first UAV
 studies are appearing\cite{xia2024ligkyx,hussien2026pqmavlink}.
@@ -72,13 +77,11 @@ studies are appearing\cite{xia2024ligkyx,hussien2026pqmavlink}.
 Measured numbers in this area travel far. A byte count that enters a
 comparison table is quoted, re-quoted, and eventually becomes the basis
 of a migration decision, yet the measurement itself is rarely
-scrutinised. That is dangerous in one specific way: the errors a
-measurement harness makes are not random, they are \emph{plausible}. A
-server status page is traffic on the socket, so it belongs in a byte
-count; a session ticket is part of the handshake, so counting it is not
-obviously wrong; an initial burst is what operating-system sockets do.
-Each of these produced a credible number in our own first pass, and
-nothing about the number revealed the error.
+scrutinised. The errors a measurement harness makes are not random; they
+are \emph{plausible}. A status page is traffic on the socket, a session
+ticket is part of the handshake, an initial burst is what sockets do ---
+each produced a credible number in our own first pass, and nothing about
+the number revealed the error.
 
 This paper is an account of five such failures, in the order we met
 them, with the magnitude of each and the check that caught it. The
@@ -86,8 +89,10 @@ setting is a measurement that was easy to get wrong in several
 independent ways at once: a mutual-authentication TLS~1.3 handshake
 carrying ML-KEM-768 and ML-DSA-65\cite{fips203,fips204}, measured over
 an emulated 9.6-kbps, 250-ms beyond-line-of-sight command-and-control
-link, where the whole handshake takes eleven seconds and every artefact
-is worth seconds. The contributions are the failure catalogue
+link of the kind surveyed in\cite{zeng2016} and specified
+in\cite{do362}, carrying \mav{} telemetry\cite{mavlink}, where the
+whole handshake takes eleven seconds and every artefact is worth
+seconds. The contributions are the failure catalogue
 (Section~\ref{sec:pitfalls}), a detection protocol assembled from the
 checks that caught them (Section~\ref{sec:protocol}), and the corrected
 number that survives the protocol (Section~\ref{sec:case}). A fuller
@@ -106,7 +111,13 @@ All measurements use OpenSSL 3.5.7\cite{openssl35} with TLS~1.3 as
 specified in RFC~8446\cite{rfc8446}. The measured configuration is a
 mutual-authentication handshake in which both peers present an
 ML-DSA-65 certificate\cite{fips204} and the key exchange is the pure
-ML-KEM-768 group\cite{fips203}. A classical comparison configuration
+ML-KEM-768 group\cite{fips203}. The other standardised signature family,
+SLH-DSA, is not measured here: its smallest parameter set carries
+7{,}856-byte signatures\cite{fips205}, which a 9.6-kbps link cannot
+absorb in any useful number of handshakes. Research libraries such as
+liboqs offer a wider algorithm set but no record layer\cite{liboqs}, and
+the record layer is what this paper measures. A classical comparison
+configuration
 uses X25519 with ECDSA-P256; it measures 1{,}915 bytes and 1.99\,s
 against the post-quantum 20{,}840 bytes and 11.27\,s, a factor of
 5.66 in time on the link used throughout. Certificates are self-signed
@@ -119,7 +130,11 @@ The client and server run on one host and communicate through a
 userspace TCP proxy that applies a token bucket and a fixed one-way
 propagation delay per forwarded chunk in each direction: 9.6\,kbps per
 direction and 250\,ms, the parameters of a narrowband
-beyond-line-of-sight radio. The throttle was validated against a known
+beyond-line-of-sight radio. DTLS~1.3 is the transport such a link would
+use in practice, but this stack implements DTLS~1.2 only\cite{rfc9147,rfc6347},
+whose cipher-suite names encode the authentication algorithm and which
+has no ML-KEM group; TLS over TCP is therefore what can be measured,
+and the framing difference is a bound rather than a measurement. The throttle was validated against a known
 transfer: pushing 12{,}000 bytes through the 9.6-kbps setting yields
 9.57\,kbps, within 0.3\,\% of target. Two earlier versions of the
 throttle were wrong in ways that were invisible in the handshake numbers
@@ -127,15 +142,13 @@ themselves; both are pitfalls~1 and~2 below.
 
 \subsection{Byte accounting convention}
 
-Bytes are counted by a record-layer parser placed inside the proxy, not
-by a total counter on the socket. The parser records every TLS record
-with its type and length, and attributes plaintext handshake messages
-(the two hellos) to message types; everything after the ServerHello is
-accounted by record. The client sends one byte of liveness probe after
-the handshake completes, which occupies a 23-byte record; every total
-reported here includes it, and the convention is stated so the
-accounting can be undone by hand. Byte counts include 5-byte TLS record
-headers; key-exchange payloads are quoted without them.
+Bytes are counted by a record-layer parser inside the proxy, not by a
+socket counter: it records every TLS record with its type and length and
+attributes the two plaintext hellos to message types, so everything after
+the ServerHello is accounted by record. The client's one-byte liveness
+probe occupies a 23-byte record, which every total here includes; the
+convention is stated so it can be undone by hand. Byte counts include
+5-byte TLS record headers, key-exchange payloads do not.
 
 \section{FIVE PITFALLS}
 \label{sec:pitfalls}
@@ -188,7 +201,10 @@ initial burst, a short transfer received its first 1{,}400 bytes at no
 cost. At 9.6\,kbps that is 1.17\,s of airtime given away, which is not
 negligible when the measured handshake takes 11.27\,s: a systematic
 10\,\% discount on every transfer, paid to the first 1{,}400 bytes. The
-burst is now
+effect is not an artefact of our emulator alone: TCP opens a connection
+with a ten-segment initial window\cite{rfc6928}, so a real link hands out
+a burst of its own, and the choice here is to remove it and measure
+serialisation rather than to leave it unaccounted. The burst is now
 zero, which makes serialisation exact. The general lesson is that
 throttles must be validated against a known transfer, not trusted to be
 conservative.
@@ -336,12 +352,11 @@ flight.
 
 Two further practices bound the residual error. The throttle is
 validated against a known transfer (within 0.3\,\% here), and the
-measurement is repeated: five runs of the post-quantum handshake give a
-standard deviation of 0.011\,s, or 0.10\,\% of the mean, on a stable
-configuration --- but repetition deserves a caution of its own, because
-in a batch of fifteen runs two stalled by 0.4--0.5\,s with no injected
-loss. The means reproduce across batches within 1\,\%; the spreads do
-not reproduce at all. Repetition measures noise on the day, and on a
+measurement is repeated: five runs give a standard deviation of 0.011\,s,
+or 0.10\,\% of the mean. Repetition carries a caution of its own, though
+--- in a batch of fifteen runs two stalled by 0.4--0.5\,s with no
+injected loss, and while the means reproduced across batches within
+1\,\%, the spreads did not. Repetition measures noise on the day; on a
 constrained link the tails are part of the measurement.
 
 \section{CASE STUDY: THE NUMBER THAT SURVIVES}
@@ -360,17 +375,20 @@ untouched. The 5.66$\times$ time ratio between the post-quantum and classical
 configurations --- the number most likely to be quoted --- becomes a byte
 ratio of 16.8$\times$ (32{,}236 against 1{,}915) and a time ratio of
 about 8.3$\times$ if the right-hand bar of Figure~\ref{fig:artefact} is
-reported by mistake. None of the checks that
-caught these errors costs more than a few hundred lines of parsing code
-and the discipline to state a flag set, and every one of them is
-reproducible from the public repository\cite{measurepackage}.
+reported by mistake. None of the checks that caught these
+errors costs more than a few hundred lines of parsing code and the
+discipline to state a flag set; all are reproducible from the public
+repository\cite{measurepackage}.
 
 \section{RELATED WORK}
 \label{sec:related}
 
 Benchmarking of post-quantum primitives on constrained hardware is well
 developed\cite{pqm4,botros2019}, and the cost of the primitives inside
-TLS has been measured on desktop stacks\cite{paquin2020,sikeridis2020ndss}.
+TLS has been measured on desktop
+stacks\cite{paquin2020,sikeridis2020ndss,sikeridis2020conext}, while
+KEMTLS shows how far the handshake itself can be restructured to remove
+the certificate signature\cite{schwabe2020kemtls}.
 That literature reports results; what it rarely reports is the failure
 modes of the measurement itself, which are exactly what a byte-level
 methodology paper can contribute. UAV-specific studies report a single

@@ -1173,3 +1173,16 @@ Is the Binding Constraint"*，本稿标题是 *"Where the Bytes Go: …"*。前�
 - 渲染逐页核对，修掉三处转换缺陷：$\\to$ 未转换、表格内 \\quad/\\emph 残留、
   参考文献双编号（样式自带 [n] 又加了手写序号）及 \\bibliographystyle 残留。
 - 投稿文件：AHPCAI2026_Huang.docx / .pdf；LaTeX 版保留作备份。
+
+## 24. 会议短文参考文献扩到 28 条（2026-11-05）
+
+- 新增 16 条：shor1997、mosca2018、nistir8105、bernstein2017、pqcryptoBook、
+  fips205、rfc9909、do362、mavlink、liboqs、rfc9147、rfc6347、rfc6928、
+  sikeridis2020conext、schwabe2020kemtls、zeng2016；全部在正文有引用点，
+  无凑数引用。
+- 相应新增三段内容：SLH-DSA 为何不测（7,856 B 签名）、DTLS 1.2 无 ML-KEM
+  组因此测 TCP、TCP 10 段初始窗口与免费 burst 的对照。
+- 为保 6 页：压缩了引言第二段、字节记账段、陷阱 3、检测协议收尾与案例研究
+  结尾约 130 词；图 1 由 11 cm 缩至 9.6 cm；表内行距 2pt→1pt；标题前距 12→10pt。
+- Word 版 6 页整（COM 计页）；LaTeX 版 7 页，投稿以 Word 版为准。
+- build_docx.py 的 CITE 映射与 28 条格式化文献同步更新（从重建的 bbl 提取）。

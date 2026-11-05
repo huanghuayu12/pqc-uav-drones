@@ -17,28 +17,48 @@ TEMPLATE = "_user_tmpl/template.docx"
 OUT = "AHPCAI2026_Huang.docx"
 FIG = "../manuscript/m5_artefact.png"
 
-CITE = {"fips203": 1, "fips204": 2, "rfc9881": 3, "openssl35": 4, "pqm4": 5,
-        "botros2019": 6, "paquin2020": 7, "sikeridis2020ndss": 8,
-        "xia2024ligkyx": 9, "hussien2026pqmavlink": 10,
-        "measurepackage": 11, "rfc8446": 12}
+CITE = {"fips203": 1, "fips204": 2, "fips205": 3, "rfc9881": 4, "rfc9909": 5,
+        "openssl35": 6, "shor1997": 7, "mosca2018": 8, "nistir8105": 9,
+        "bernstein2017": 10, "pqcryptoBook": 11, "pqm4": 12, "botros2019": 13,
+        "paquin2020": 14, "sikeridis2020ndss": 15, "xia2024ligkyx": 16,
+        "hussien2026pqmavlink": 17, "zeng2016": 18, "do362": 19, "mavlink": 20,
+        "measurepackage": 21, "rfc8446": 22, "liboqs": 23, "rfc9147": 24,
+        "rfc6347": 25, "rfc6928": 26, "sikeridis2020conext": 27,
+        "schwabe2020kemtls": 28}
 REF = {"fig:artefact": "1", "tab:pitfalls": "1", "tab:messages": "2",
        "sec:intro": "1", "sec:testbed": "2", "sec:pitfalls": "3",
        "sec:protocol": "4", "sec:case": "5", "sec:related": "6",
        "sec:conclusion": "7"}
 
 REFERENCES = [
- "National Institute of Standards and Technology, \u201cFIPS 203: Module-lattice-based key-encapsulation mechanism standard,\u201d tech. rep., U.S. Department of Commerce, 2024.",
- "National Institute of Standards and Technology, \u201cFIPS 204: Module-lattice-based digital signature standard,\u201d tech. rep., U.S. Department of Commerce, 2024.",
- "J. Massimo, P. Kampanakis, and S. Salter, \u201cInternet X.509 public key infrastructure: Algorithm identifiers for ML-DSA,\u201d RFC 9881, 2025.",
- "The OpenSSL Project, \u201cOpenSSL 3.5: ML-KEM, ML-DSA and SLH-DSA support,\u201d https://openssl-library.org/, 2025. Version 3.5.7 used for all measurements.",
- "M. J. Kannwischer, J. Rijneveld, P. Schwabe, and K. Stoffelen, \u201cpqm4: Testing and benchmarking NIST PQC on ARM Cortex-M4,\u201d in Proc. 2nd NIST PQC Standardization Conference, 2019.",
- "L. Botros, M. J. Kannwischer, and P. Schwabe, \u201cMemory-efficient high-speed implementation of Kyber on ARM Cortex-M4,\u201d in Progress in Cryptology \u2013 AFRICACRYPT 2019, LNCS 11627, pp. 111\u2013130, 2019.",
- "C. Paquin, D. Stebila, and G. Tamvada, \u201cBenchmarking post-quantum cryptography in TLS,\u201d in Post-Quantum Cryptography \u2013 PQCrypto 2020, LNCS 12100, pp. 72\u201391, Springer, 2020.",
- "D. Sikeridis, P. Kampanakis, and M. Devetsikiotis, \u201cPost-quantum authentication in TLS 1.3: A performance study,\u201d in Proc. 27th Annual Network and Distributed System Security Symposium (NDSS), The Internet Society, 2020.",
- "T. Xia, M. Wang, J. He, G. Yang, L. Fan, and G. Wei, \u201cA quantum-resistant identity authentication and key agreement scheme for UAV networks based on Kyber algorithm,\u201d Drones 8(8), 359, 2024.",
- "A. Hussien and A. A. Abdullah, \u201cA post-quantum lightweight mutual authentication and encryption scheme for secure UAV communications,\u201d Frontiers in Computer Science 8, 2026.",
- "X. Huang, Y. Han, S. Zhu, H. Wu, and Z. Liu, \u201cMeasurement package: post-quantum TLS 1.3 handshakes over an emulated narrowband command-and-control link,\u201d https://github.com/huanghuayu12/pqc-uav-drones, 2026.",
- "E. Rescorla, \u201cThe transport layer security (TLS) protocol version 1.3,\u201d RFC 8446, 2018.",
+ 'National Institute of Standards and Technology, “FIPS 203: Module-lattice-based key-encapsulation mechanism standard,” tech. rep., U.S. Department of Commerce, 2024.',
+ 'National Institute of Standards and Technology, “FIPS 204: Module-lattice-based digital signature standard,” tech. rep., U.S. Department of Commerce, 2024.',
+ 'National Institute of Standards and Technology, “FIPS 205: Stateless hash-based digital signature standard,” tech. rep., U.S. Department of Commerce, 2024.',
+ 'J. Massimo, P. Kampanakis, and S. Salter, “Internet X.509 public key infrastructure: Algorithm identifiers for ML-DSA,” RFC 9881, 2025.',
+ 'J. Massimo, P. Kampanakis, and S. Salter, “Internet X.509 public key infrastructure: Algorithm identifiers for SLH-DSA,” RFC 9909, 2025.',
+ 'The OpenSSL Project, “OpenSSL 3.5: ML-KEM, ML-DSA and SLH-DSA support,” https://openssl-library.org/, 2025. Version 3.5.7 used for all measurements.',
+ 'P. W. Shor, “Polynomial-time algorithms for prime factorization and discrete logarithms on a quantum computer,” SIAM Journal on Computing 26(5), pp. 1484–1509, 1997.',
+ 'M. Mosca, “Cybersecurity in an era with quantum computers: Will we be ready?,” IEEE Security & Privacy 16(5), pp. 38–41, 2018.',
+ 'L. Chen, S. Jordan, Y.-K. Liu, D. Moody, R. Peralta, R. Perlner, and D. Smith-Tone, “Report on post-quantum cryptography,” Tech. Rep. NISTIR 8105, National Institute of Standards and Technology, 2016.',
+ 'D. J. Bernstein and T. Lange, “Post-quantum cryptography,” Nature 549(7675), pp. 188–194, 2017.',
+ 'D. J. Bernstein, J. Buchmann, and E. Dahmen, eds., Post-Quantum Cryptography, Springer, Berlin, Germany, 2009.',
+ 'M. J. Kannwischer, J. Rijneveld, P. Schwabe, and K. Stoffelen, “pqm4: Testing and benchmarking NIST PQC on ARM Cortex-M4,” in Proc. 2nd NIST PQC Standardization Conference, 2019.',
+ 'L. Botros, M. J. Kannwischer, and P. Schwabe, “Memory-efficient high-speed implementation of Kyber on ARM Cortex-M4,” in Progress in Cryptology – AFRICACRYPT 2019, LNCS 11627, pp. 111–130, 2019.',
+ 'C. Paquin, D. Stebila, and G. Tamvada, “Benchmarking post-quantum cryptography in TLS,” in Post-Quantum Cryptography – PQCrypto 2020, LNCS 12100, pp. 72–91, Springer, 2020.',
+ 'D. Sikeridis, P. Kampanakis, and M. Devetsikiotis, “Post-quantum authentication in TLS 1.3: A performance study,” in Proc. 27th Annual Network and Distributed System Security Symposium (NDSS), The Internet Society, 2020.',
+ 'T. Xia, M. Wang, J. He, G. Yang, L. Fan, and G. Wei, “A quantum-resistant identity authentication and key agreement scheme for UAV networks based on Kyber algorithm,” Drones 8(8), 359, 2024.',
+ 'A. Hussien and A. A. Abdullah, “A post-quantum lightweight mutual authentication and encryption scheme for secure UAV communications,” Frontiers in Computer Science 8, 2026.',
+ 'Y. Zeng, R. Zhang, and T. J. Lim, “Wireless communications with unmanned aerial vehicles: Opportunities and challenges,” IEEE Communications Magazine 54(5), pp. 36–42, 2016.',
+ 'RTCA, Inc., “DO-362: Command and control (C2) data link minimum operational performance standards (MOPS) (terrestrial),” tech. rep., RTCA, Inc., Washington, DC, USA, 2016.',
+ 'MAVLink Development Team, “MAVLink developer guide,” https://mavlink.io/en/, 2024.',
+ 'X. Huang, Y. Han, S. Zhu, H. Wu, and Z. Liu, “Measurement package: post-quantum TLS 1.3 handshakes over an emulated narrowband command-and-control link,” https://github.com/huanghuayu12/pqc-uav-drones, 2026.',
+ 'E. Rescorla, “The transport layer security (TLS) protocol version 1.3,” RFC 8446, 2018.',
+ 'Open Quantum Safe Project, “liboqs: An open-source C library for quantum-safe cryptography,” https://openquantumsafe.org/, 2024.',
+ 'E. Rescorla, H. Tschofenig, and T. Fossati, “The datagram transport layer security (DTLS) protocol version 1.3,” RFC 9147, 2022.',
+ 'E. Rescorla and N. Modadugu, “Datagram transport layer security version 1.2,” RFC 6347, 2012.',
+ 'J. Chu, N. Dukkipati, Y. Cheng, and M. Mathis, “Increasing TCP’s initial window,” RFC 6928, 2013.',
+ 'D. Sikeridis, P. Kampanakis, and M. Devetsikiotis, “Assessing the overhead of post-quantum cryptography in TLS 1.3 and SSH,” in Proc. 16th International Conference on Emerging Networking Experiments and Technologies (CoNEXT), pp. 149–156, ACM, 2020.',
+ 'P. Schwabe, D. Stebila, and T. Wiggers, “Post-quantum TLS without handshake signatures,” in Proc. 2020 ACM SIGSAC Conference on Computer and Communications Security (CCS), pp. 1461–1480, ACM, 2020.',
 ]
 
 # ---------------------------------------------------------------- inline
@@ -51,6 +71,7 @@ TOKEN = re.compile(r"\\(cite|texttt|textbf|emph|ref|url|supit)\{([^}]*)\}")
 
 
 def plain(s):
+    s = s.replace(r"\mav{}", "MAVLink")
     s = s.replace("{,}", ",")
     s = s.replace(r"$\to$", "\u2192")
     s = s.replace(r"$\times$", "\u00d7").replace(r"$+$", "+")
@@ -195,8 +216,8 @@ def borders(table, header_rows=1):
 def cell_text(cell, text, bold=False, italic=False, size=9, align=None):
     cell.text = ""
     p = cell.paragraphs[0]
-    p.paragraph_format.space_before = Pt(2)
-    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.space_before = Pt(1)
+    p.paragraph_format.space_after = Pt(1)
     p.paragraph_format.line_spacing = 1.0
     if align is not None:
         p.alignment = align
@@ -352,7 +373,7 @@ def main():
     for kind, text in bl:
         if kind == "h1":
             p = doc.add_paragraph(style="Heading 1")
-            p.paragraph_format.space_before = Pt(12)
+            p.paragraph_format.space_before = Pt(10)
             p.add_run(text.upper())
         elif kind == "h2":
             p = doc.add_paragraph(style="Heading 2")
@@ -377,7 +398,7 @@ def main():
                 p = doc.add_paragraph()
                 p.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 p.paragraph_format.space_before = Pt(10)
-                p.add_run().add_picture(FIG, width=Cm(11))
+                p.add_run().add_picture(FIG, width=Cm(9.6))
                 caption(doc, FIG_CAP, before=False)
         else:
             body_par(doc, text)

@@ -11,6 +11,8 @@
 ## 论文信息
 
 - **标题**：Five ways to mismeasure a post-quantum TLS 1.3 handshake on a narrowband link
+- **参考文献 28 条**（含 SLH-DSA/FIPS 205、DO-362、MAVLink、DTLS 1.3/1.2、
+  RFC 6928、liboqs、CoNEXT/KEMTLS 等扩展），正文全部有引用点。
 - **定位**：测量方法论短文（五个测量陷阱 + 检测协议）。**与 MDPI Drones 期刊版是两篇不同贡献**：
   期刊版讲迁移成本结论，本短文只讲"测量本身怎么被做错、怎么查出来"，重叠内容
   约为期刊版 §3.2–3.3 的一部分。期刊版投稿时须引用本会议版（若录用）。
