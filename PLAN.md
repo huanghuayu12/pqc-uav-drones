@@ -1195,3 +1195,14 @@ Is the Binding Constraint"*，本稿标题是 *"Where the Bytes Go: …"*。前�
 - 修掉 `\mav{}` 未定义宏（Word 版靠 build_docx 的替换侥幸正常，LaTeX 版报错）。
 - LaTeX 备份版：7 页 / 0 overfull / 0 未定义；Word 版：6 页整（COM 计页）。
 - 28 条文献，[1]–[7] 在 p5，[8]–[28] 在 p6，编号连续无重复。
+
+## 26. 会议短文格式终审（2026-11-05）
+
+- 用模板 XML 反查样式链：标题 16 pt（sz=32）粗体居中、Abstract 标题 11 pt、
+  正文 10 pt、题注 9 pt，全部继承自模板，未被改写。
+- 像素量测 6 页：墨迹左右边界 84/826（110 dpi）= 1.93 cm 边距，无越界。
+- 发现并修：①表格列宽失效（只写 w:tcW 未写 w:gridCol，Word 重算成等宽）；
+  ②表后无间距、合计行缺横线；③图片段落样式 Normal → SPIE body text。
+- PDF 字体审计：9 个子集全嵌入；Arial 只用于 37 个空格字形（Word 的行内空格
+  归属），无任何可见字形为 Arial；代码片段 Courier New 9 pt。
+- 页眉页脚为空、无 PAGE 域；参考文献 [1]–[28] 自动编号，无重复。

@@ -236,15 +236,34 @@ def make_table(doc, widths, rows, aligns, header=True):
     t = doc.add_table(rows=len(rows), cols=len(widths))
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
     t.autofit = False
+    # Both the grid (w:gridCol) and every cell (w:tcW) must carry the width,
+    # otherwise Word recomputes equal columns and the layout collapses.
+    for i, w in enumerate(widths):
+        t.columns[i].width = Cm(w)
     for row in t.rows:
         for i, w in enumerate(widths):
             row.cells[i].width = Cm(w)
+    tblW = t._tbl.tblPr.find(qn("w:tblW"))
+    if tblW is not None:
+        tblW.set(qn("w:type"), "dxa")
+        tblW.set(qn("w:w"), str(int(sum(widths) * 567)))
     for ri, row in enumerate(rows):
         for ci, txt in enumerate(row):
             cell_text(row and t.cell(ri, ci), txt,
                       bold=(header and ri == 0),
                       size=9, align=aligns[ci])
     borders(t, header_rows=1)
+    # rule above a trailing total row, as in the LaTeX original
+    if rows and str(rows[-1][0]).strip().lower().startswith("total"):
+        for cell in t.rows[-1].cells:
+            tcPr = cell._tc.get_or_add_tcPr()
+            tb = OxmlElement("w:tcBorders")
+            top = OxmlElement("w:top")
+            top.set(qn("w:val"), "single")
+            top.set(qn("w:sz"), "4")
+            top.set(qn("w:color"), "000000")
+            tb.append(top)
+            tcPr.append(tb)
     return t
 
 
@@ -256,8 +275,10 @@ def caption(doc, text, before=True):
     return p
 
 
-def body_par(doc, text, style="SPIE body text"):
+def body_par(doc, text, style="SPIE body text", space_before=None):
     p = doc.add_paragraph(style=style)
+    if space_before is not None:
+        p.paragraph_format.space_before = Pt(space_before)
     add_runs(p, runs(text))
     return p
 
@@ -370,6 +391,7 @@ def main():
 
     # ---- sections
     n_tab = 0
+    after_table = False
     for kind, text in bl:
         if kind == "h1":
             p = doc.add_paragraph(style="Heading 1")
@@ -383,25 +405,27 @@ def main():
                 n_tab += 1
                 if n_tab == 1:
                     caption(doc, T1_CAP, before=True)
-                    make_table(doc, [0.9, 5.0, 6.0, 4.2], T1,
+                    make_table(doc, [0.9, 5.3, 6.4, 4.5], T1,
                                [WD_ALIGN_PARAGRAPH.CENTER,
                                 WD_ALIGN_PARAGRAPH.LEFT,
                                 WD_ALIGN_PARAGRAPH.LEFT,
                                 WD_ALIGN_PARAGRAPH.LEFT])
                 else:
                     caption(doc, T2_CAP, before=True)
-                    make_table(doc, [6.2, 2.0, 8.0], T2,
+                    make_table(doc, [6.4, 2.2, 8.5], T2,
                                [WD_ALIGN_PARAGRAPH.LEFT,
                                 WD_ALIGN_PARAGRAPH.RIGHT,
                                 WD_ALIGN_PARAGRAPH.LEFT])
+                after_table = True
             else:
-                p = doc.add_paragraph()
+                p = doc.add_paragraph(style="SPIE body text")
                 p.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 p.paragraph_format.space_before = Pt(10)
                 p.add_run().add_picture(FIG, width=Cm(9.6))
                 caption(doc, FIG_CAP, before=False)
         else:
-            body_par(doc, text)
+            body_par(doc, text, space_before=6 if after_table else None)
+            after_table = False
 
     # ---- acknowledgments
     p = doc.add_paragraph(style="Heading 1")
